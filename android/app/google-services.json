@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "354048220850",
+    "project_id": "safeerv3-f59a4",
+    "storage_bucket": "safeerv3-f59a4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:354048220850:android:682663556c5c021cedb3ab",
+        "android_client_info": {
+          "package_name": "com.example.safeer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCk9JkB7fUCsgQKBLLmJ_f33D5Z_CzpnVs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
