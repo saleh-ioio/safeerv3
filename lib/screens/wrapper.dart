@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:safeer/models/user.dart';
 import 'package:safeer/screens/Home/admin/HomeAdmin.dart';
-import 'package:safeer/screens/authenticate/authenticate.dart';
+import 'package:safeer/screens/authenticate/anonnymousSignIn.dart';
 
 class Wrapper extends StatelessWidget {
   const Wrapper({super.key});
