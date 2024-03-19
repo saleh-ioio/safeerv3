@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:safeer/screens/authenticate/signIn.dart';
 import 'package:safeer/services/auth.dart';
 
 class Register extends StatefulWidget {
@@ -77,6 +78,9 @@ class _RegisterState extends State<Register> {
                     } else {
                       print('REGISTERED');
                       print(result.uid);
+                      Navigator.pop(context);
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => SignIn()));
                     }
                   }
                 },
