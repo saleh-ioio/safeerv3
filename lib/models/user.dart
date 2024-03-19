@@ -5,6 +5,7 @@ class UserProvider extends ChangeNotifier {
   UserProvider({this.uid});
 
   void updateUid(String? uid) {
+    print('updateUid called');
     this.uid = uid;
     notifyListeners();
   }

@@ -3,7 +3,8 @@ import 'package:safeer/screens/authenticate/signIn.dart';
 import 'package:safeer/services/auth.dart';
 
 class Register extends StatefulWidget {
-  const Register({super.key});
+  final Function toggleView;
+  const Register({super.key, required this.toggleView});
 
   @override
   State<Register> createState() => _RegisterState();
@@ -76,15 +77,20 @@ class _RegisterState extends State<Register> {
                         });
                       }
                     } else {
-                      print('REGISTERED');
+                      print('signed in');
                       print(result.uid);
-                      Navigator.pop(context);
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => SignIn()));
+                      widget.toggleView!();
                     }
                   }
                 },
                 child: Text('Register'),
+              ),
+              Text("Already have an account?"),
+              TextButton(
+                onPressed: () {
+                  widget.toggleView!();
+                },
+                child: Text('Sign in'),
               ),
             ],
           ),

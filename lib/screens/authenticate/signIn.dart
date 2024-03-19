@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'package:safeer/models/user.dart';
 import 'package:safeer/services/auth.dart';
 
 class SignIn extends StatefulWidget {
-  const SignIn({super.key});
+  final Function toggleView;
+  const SignIn({
+    Key? key,
+    required this.toggleView,
+  }) : super(key: key);
 
   @override
   State<SignIn> createState() => _SignInState();
@@ -54,23 +61,28 @@ class _SignInState extends State<SignIn> {
               ElevatedButton(
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    print('valid');
-                    dynamic result = await _auth.registerWithEmailAndPassword(
-                        email, password);
+                    dynamic result =
+                        await _auth.signInWithEmailAndPassword(email, password);
                     if (result == null) {
-                      {
-                        print('error signing in');
-                        setState(() {
-                          error = 'Please supply a valid email';
-                        });
-                      }
+                      setState(() {
+                        error = 'Could not sign in with those credentials';
+                      });
                     } else {
-                      print('Signed in');
+                      print('signed in');
                       print(result.uid);
+
+                      context.read<UserProvider>().updateUid(result.uid);
+                      widget.toggleView!();
                     }
                   }
                 },
                 child: Text('Sign in'),
+              ),
+              TextButton(
+                onPressed: () {
+                  widget.toggleView!();
+                },
+                child: Text('Create a new account'),
               ),
             ],
           ),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:safeer/models/user.dart';
+import 'package:safeer/screens/Home/admin/HomeAdmin.dart';
 import 'package:safeer/screens/authenticate/Register.dart';
+import 'package:safeer/screens/authenticate/signIn.dart';
 import 'package:safeer/services/auth.dart';
 
 class authenticate extends StatefulWidget {
@@ -14,9 +16,22 @@ class authenticate extends StatefulWidget {
 class _authenticateState extends State<authenticate> {
   final AuthService _auth = AuthService();
 
+  // index's : true for sign in, false for register
+  bool isSignIn = true;
+
+  void toggleView() {
+    setState(() {
+      isSignIn = !isSignIn;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Register();
+    return isSignIn
+        ? SignIn(
+            toggleView: toggleView,
+          )
+        : Register(toggleView: toggleView);
   }
 
   Widget annonymouslySignIn() {
