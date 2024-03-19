@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:safeer/models/user.dart';
-import 'package:safeer/screens/authenticate/Register.dart';
+import 'package:safeer/screens/authenticate/register.dart';
 import 'package:safeer/screens/authenticate/signIn.dart';
 import 'package:safeer/services/auth.dart';
 
