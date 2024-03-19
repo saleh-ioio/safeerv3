@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:safeer/screens/authenticate/signIn.dart';
 import 'package:safeer/services/auth.dart';
 
 class Register extends StatefulWidget {
@@ -79,7 +78,7 @@ class _RegisterState extends State<Register> {
                     } else {
                       print('signed in');
                       print(result.uid);
-                      widget.toggleView!();
+                      widget.toggleView();
                     }
                   }
                 },
@@ -88,7 +87,7 @@ class _RegisterState extends State<Register> {
               Text("Already have an account?"),
               TextButton(
                 onPressed: () {
-                  widget.toggleView!();
+                  widget.toggleView();
                 },
                 child: Text('Sign in'),
               ),
