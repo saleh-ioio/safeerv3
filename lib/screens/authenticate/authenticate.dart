@@ -17,22 +17,25 @@ class _authenticateState extends State<authenticate> {
   @override
   Widget build(BuildContext context) {
     return Register();
-    //  Scaffold(
-    //   body: Column(children: [
-    //     Text('authenticate'),
-    //     TextButton(
-    //         onPressed: () async {
-    //           dynamic result = await _auth.signInAnon();
-    //           if (result == null) {
-    //             print('error signing in');
-    //           } else {
-    //             context.read<UserProvider>().updateUid(result.uid);
-    //             print('signed in');
-    //             print(result.uid);
-    //           }
-    //         },
-    //         child: Text("annonymous sign in")),
-    //   ]),
-    // );
+  }
+
+  Widget annonymouslySignIn() {
+    return Scaffold(
+      body: Column(children: [
+        Text('authenticate'),
+        TextButton(
+            onPressed: () async {
+              dynamic result = await _auth.signInAnon();
+              if (result == null) {
+                print('error signing in');
+              } else {
+                context.read<UserProvider>().updateUid(result.uid);
+                print('signed in');
+                print(result.uid);
+              }
+            },
+            child: Text("annonymous sign in")),
+      ]),
+    );
   }
 }
