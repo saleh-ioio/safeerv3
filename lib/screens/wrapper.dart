@@ -11,6 +11,6 @@ class Wrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = context.watch<UserProvider>().uid;
     print("user: $user");
-    return user == null ? const authenticate() : const HomeAdmin();
+    return user == null ? const Authenticate() : const HomeAdmin();
   }
 }

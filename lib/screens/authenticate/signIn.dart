@@ -72,7 +72,7 @@ class _SignInState extends State<SignIn> {
                       print(result.uid);
 
                       context.read<UserProvider>().updateUid(result.uid);
-                      widget.toggleView!();
+                      widget.toggleView();
                     }
                   }
                 },
@@ -80,7 +80,7 @@ class _SignInState extends State<SignIn> {
               ),
               TextButton(
                 onPressed: () {
-                  widget.toggleView!();
+                  widget.toggleView();
                 },
                 child: Text('Create a new account'),
               ),

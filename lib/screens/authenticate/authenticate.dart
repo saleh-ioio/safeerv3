@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:safeer/models/user.dart';
-import 'package:safeer/screens/Home/admin/HomeAdmin.dart';
 import 'package:safeer/screens/authenticate/Register.dart';
 import 'package:safeer/screens/authenticate/signIn.dart';
 import 'package:safeer/services/auth.dart';
 
-class authenticate extends StatefulWidget {
-  const authenticate({super.key});
+class Authenticate extends StatefulWidget {
+  const Authenticate({super.key});
 
   @override
-  State<authenticate> createState() => _authenticateState();
+  State<Authenticate> createState() => _AuthenticateState();
 }
 
-class _authenticateState extends State<authenticate> {
+class _AuthenticateState extends State<Authenticate> {
   final AuthService _auth = AuthService();
 
   // index's : true for sign in, false for register
