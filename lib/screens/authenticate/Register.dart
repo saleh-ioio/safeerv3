@@ -67,7 +67,7 @@ class _RegisterState extends State<Register> {
                   if (_formKey.currentState!.validate()) {
                     print('valid');
                     dynamic result = await _auth.registerWithEmailAndPassword(
-                        email, password);
+                        email: email, userName: username, password: password);
                     if (result == null) {
                       {
                         print('error signing in');

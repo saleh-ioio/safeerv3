@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:safeer/models/user.dart';
+import 'package:safeer/services/dataBase.dart';
 
 // This class will be used to handle the authentication of the user
 class AuthService {
@@ -30,11 +31,16 @@ class AuthService {
   }
 
 // register with email and password
-  Future registerWithEmailAndPassword(String email, String password) async {
+  Future registerWithEmailAndPassword(
+      {required String email,
+      required String userName,
+      required String password}) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       User? user = result.user;
+
+      DataBaseService(uid: user!.uid).updateUserData(userName, email);
       return _userFromFirebaseUser(user!);
     } catch (e) {
       print(e.toString());
