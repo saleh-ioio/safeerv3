@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:safeer/models/user.dart';
+import 'package:safeer/screens/Home/admin/Order.dart';
 import 'package:safeer/services/auth.dart';
 
 class HomeAdmin extends StatefulWidget {
@@ -15,20 +16,30 @@ class _HomeAdminState extends State<HomeAdmin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(actions: [
-        TextButton(
-            onPressed: () async {
-              final result = await _auth.signOut();
+        appBar: AppBar(
+          actions: [
+            TextButton(
+                onPressed: () async {
+                  final result = await _auth.signOut();
 
-              if (result == null) {
-                context.read<UserProvider>().updateUid(result);
-                print("signed out");
-              } else {
-                print(result.toString());
-              }
-            },
-            child: Text("sign out"))
-      ]),
-    );
+                  if (result == null) {
+                    context.read<UserProvider>().updateUid(result);
+                    print("signed out");
+                  } else {
+                    print(result.toString());
+                  }
+                },
+                child: Text("sign out"))
+          ],
+        ),
+        body: Column(),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.greenAccent,
+          onPressed: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => OrderPage()));
+          },
+          child: const Icon(Icons.add),
+        ));
   }
 }

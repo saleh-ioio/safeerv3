@@ -13,4 +13,22 @@ class DataBaseService {
       'email': email,
     });
   }
+
+  Future updateOrderData(String clientName, String address, String phone,
+      String locationLink, String paymentMethod, double totalPrice) async {
+    DocumentReference userDoc = userCollection.doc(uid);
+
+    Map<String, dynamic> orderData = {
+      'clientName': clientName,
+      'address': address,
+      'phone': phone,
+      'locationLink': locationLink,
+      'paymentMethod': paymentMethod,
+      'totalPrice': totalPrice,
+    };
+
+    return await userDoc.update({
+      'orders': FieldValue.arrayUnion([orderData])
+    });
+  }
 }

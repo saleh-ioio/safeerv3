@@ -22,7 +22,13 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          appBarTheme: const AppBarTheme(
+            backgroundColor: Color.fromARGB(255, 65, 147, 121),
+          ),
+          colorScheme: ColorScheme.light(
+              background: Colors.white,
+              primary: Colors.green,
+              secondary: Colors.white),
           useMaterial3: true,
         ),
         home: const Wrapper(),
