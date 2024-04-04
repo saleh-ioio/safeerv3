@@ -9,6 +9,8 @@ class Register extends StatefulWidget {
   State<Register> createState() => _RegisterState();
 }
 
+enum UserKind { owner, rider }
+
 class _RegisterState extends State<Register> {
   final AuthService _auth = AuthService();
 
@@ -17,6 +19,8 @@ class _RegisterState extends State<Register> {
   String password = '';
   String username = '';
   String error = '';
+
+  UserKind _userKind = UserKind.owner;
 
   final _formKey = GlobalKey<FormState>();
   @override
@@ -30,6 +34,30 @@ class _RegisterState extends State<Register> {
         child: Center(
           child: Column(
             children: [
+              ListTile(
+                title: const Text('Owner'),
+                leading: Radio(
+                  value: UserKind.owner,
+                  groupValue: _userKind,
+                  onChanged: (UserKind? value) {
+                    setState(() {
+                      _userKind = value!;
+                    });
+                  },
+                ),
+              ),
+              ListTile(
+                title: const Text('Rider'),
+                leading: Radio(
+                  value: UserKind.rider,
+                  groupValue: _userKind,
+                  onChanged: (UserKind? value) {
+                    setState(() {
+                      _userKind = value!;
+                    });
+                  },
+                ),
+              ),
               TextFormField(
                 decoration: InputDecoration(
                   hintText: 'Email',
