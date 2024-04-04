@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:safeer/models/user.dart';
 import 'package:safeer/screens/Home/admin/Order.dart';
 import 'package:safeer/services/auth.dart';
+import 'package:safeer/services/dataBase.dart';
 
 class HomeAdmin extends StatefulWidget {
   const HomeAdmin({super.key});
@@ -32,7 +33,7 @@ class _HomeAdminState extends State<HomeAdmin> {
                 child: Text("sign out"))
           ],
         ),
-        body: Column(),
+        body: orderList(),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.greenAccent,
           onPressed: () {
@@ -41,5 +42,43 @@ class _HomeAdminState extends State<HomeAdmin> {
           },
           child: const Icon(Icons.add),
         ));
+  }
+
+  Widget orderList() {
+    final uid = context.watch<UserProvider>().uid;
+
+    if (uid == null) {
+      return Container(
+        child: const Center(
+          child: Text("No Orders"),
+        ),
+      );
+    }
+    return StreamBuilder(
+      stream: DataBaseService(uid: uid).orders,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final orders = snapshot.data!['orders'];
+          if (orders == null) {
+            return const Center(
+              child: Text("No Orders"),
+            );
+          }
+          return ListView.builder(
+            itemCount: orders.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(orders[index]['clientName']),
+                subtitle: Text(orders[index]['address']),
+              );
+            },
+          );
+        } else {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
+    );
   }
 }

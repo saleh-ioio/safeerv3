@@ -134,6 +134,7 @@ class _OrderPageState extends State<OrderPage> {
                       _paymentMethod,
                       _totalPrice);
                 }
+                Navigator.pop(context);
               },
               child: Text('Save Order'),
             )

@@ -11,6 +11,7 @@ class DataBaseService {
     return await userCollection.doc(uid).set({
       'name': userName,
       'email': email,
+      'orders': [],
     });
   }
 
@@ -30,5 +31,9 @@ class DataBaseService {
     return await userDoc.update({
       'orders': FieldValue.arrayUnion([orderData])
     });
+  }
+
+  Stream<DocumentSnapshot<Object?>> get orders {
+    return userCollection.doc(uid).snapshots();
   }
 }
