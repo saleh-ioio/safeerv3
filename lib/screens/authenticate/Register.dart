@@ -9,7 +9,7 @@ class Register extends StatefulWidget {
   State<Register> createState() => _RegisterState();
 }
 
-enum UserKind { owner, rider }
+enum UserType { owner, rider }
 
 class _RegisterState extends State<Register> {
   final AuthService _auth = AuthService();
@@ -20,7 +20,7 @@ class _RegisterState extends State<Register> {
   String username = '';
   String error = '';
 
-  UserKind _userKind = UserKind.owner;
+  int _userKind = 0; // 0 for owner and 1 for rider
 
   final _formKey = GlobalKey<FormState>();
   @override
@@ -37,9 +37,9 @@ class _RegisterState extends State<Register> {
               ListTile(
                 title: const Text('Owner'),
                 leading: Radio(
-                  value: UserKind.owner,
+                  value: 0,
                   groupValue: _userKind,
-                  onChanged: (UserKind? value) {
+                  onChanged: (int? value) {
                     setState(() {
                       _userKind = value!;
                     });
@@ -49,9 +49,9 @@ class _RegisterState extends State<Register> {
               ListTile(
                 title: const Text('Rider'),
                 leading: Radio(
-                  value: UserKind.rider,
+                  value: 1,
                   groupValue: _userKind,
-                  onChanged: (UserKind? value) {
+                  onChanged: (int? value) {
                     setState(() {
                       _userKind = value!;
                     });
@@ -93,9 +93,11 @@ class _RegisterState extends State<Register> {
               ElevatedButton(
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    print('valid');
                     dynamic result = await _auth.registerWithEmailAndPassword(
-                        email: email, userName: username, password: password);
+                        email: email,
+                        userName: username,
+                        password: password,
+                        userType: _userKind);
                     if (result == null) {
                       {
                         print('error signing in');
