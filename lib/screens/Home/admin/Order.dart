@@ -1,13 +1,12 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:safeer/models/user.dart';
 import 'package:safeer/services/dataBase.dart';
 
 class OrderPage extends StatefulWidget {
+  const OrderPage({super.key});
+
   @override
   _OrderPageState createState() => _OrderPageState();
 }
@@ -26,14 +25,14 @@ class _OrderPageState extends State<OrderPage> {
     final userId = context.watch<UserProvider>().uid;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Order Page'),
+        title: const Text('Order Page'),
       ),
       body: Form(
         key: _formKey,
         child: Column(
           children: <Widget>[
             TextFormField(
-              decoration: InputDecoration(labelText: 'Client Name'),
+              decoration: const InputDecoration(labelText: 'Client Name'),
               validator: (value) {
                 if (value!.isEmpty) {
                   return 'Please enter client name';
@@ -47,7 +46,7 @@ class _OrderPageState extends State<OrderPage> {
               },
             ),
             TextFormField(
-              decoration: InputDecoration(labelText: 'Address'),
+              decoration: const InputDecoration(labelText: 'Address'),
               validator: (value) {
                 if (value!.isEmpty) {
                   return 'Please enter address';
@@ -61,7 +60,7 @@ class _OrderPageState extends State<OrderPage> {
               },
             ),
             TextFormField(
-              decoration: InputDecoration(labelText: 'Phone'),
+              decoration: const InputDecoration(labelText: 'Phone'),
               validator: (value) {
                 if (value!.isEmpty) {
                   return 'Please enter phone number';
@@ -75,7 +74,7 @@ class _OrderPageState extends State<OrderPage> {
               },
             ),
             TextFormField(
-              decoration: InputDecoration(labelText: 'Location Link'),
+              decoration: const InputDecoration(labelText: 'Location Link'),
               validator: (value) {
                 if (value!.isEmpty) {
                   return 'Please enter location link';
@@ -89,7 +88,7 @@ class _OrderPageState extends State<OrderPage> {
               },
             ),
             TextFormField(
-              decoration: InputDecoration(labelText: 'Payment Method'),
+              decoration: const InputDecoration(labelText: 'Payment Method'),
               validator: (value) {
                 if (value!.isEmpty) {
                   return 'Please enter payment method';
@@ -103,7 +102,7 @@ class _OrderPageState extends State<OrderPage> {
               },
             ),
             TextFormField(
-              decoration: InputDecoration(labelText: 'Total Price'),
+              decoration: const InputDecoration(labelText: 'Total Price'),
               validator: (value) {
                 if (value!.isEmpty) {
                   return 'Please enter total price';
@@ -136,7 +135,7 @@ class _OrderPageState extends State<OrderPage> {
                 }
                 Navigator.pop(context);
               },
-              child: Text('Save Order'),
+              child: const Text('Save Order'),
             )
           ],
         ),

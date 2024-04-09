@@ -36,19 +36,21 @@ class _AuthenticateState extends State<Authenticate> {
   Widget annonymouslySignIn() {
     return Scaffold(
       body: Column(children: [
-        Text('authenticate'),
+        const Text('authenticate'),
         TextButton(
             onPressed: () async {
               dynamic result = await _auth.signInAnon();
               if (result == null) {
                 print('error signing in');
               } else {
-                context.read<UserProvider>().updateUid(result.uid);
+                context
+                    .read<UserProvider>()
+                    .updateUid(result.uid, UserTyp.owner);
                 print('signed in');
                 print(result.uid);
               }
             },
-            child: Text("annonymous sign in")),
+            child: const Text("annonymous sign in")),
       ]),
     );
   }

@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:safeer/models/user.dart';
 import 'package:safeer/services/auth.dart';
 
 class Register extends StatefulWidget {
@@ -9,8 +11,6 @@ class Register extends StatefulWidget {
   State<Register> createState() => _RegisterState();
 }
 
-enum UserType { owner, rider }
-
 class _RegisterState extends State<Register> {
   final AuthService _auth = AuthService();
 
@@ -20,7 +20,7 @@ class _RegisterState extends State<Register> {
   String username = '';
   String error = '';
 
-  int _userKind = 0; // 0 for owner and 1 for rider
+  UserTyp userType = UserTyp.owner;
 
   final _formKey = GlobalKey<FormState>();
   @override
@@ -36,12 +36,12 @@ class _RegisterState extends State<Register> {
             children: [
               ListTile(
                 title: const Text('Owner'),
-                leading: Radio(
-                  value: 0,
-                  groupValue: _userKind,
-                  onChanged: (int? value) {
+                leading: Radio<UserTyp>(
+                  value: UserTyp.owner,
+                  groupValue: userType, //_userKind,
+                  onChanged: (UserTyp? value) {
                     setState(() {
-                      _userKind = value!;
+                      userType = value!;
                     });
                   },
                 ),
@@ -49,11 +49,11 @@ class _RegisterState extends State<Register> {
               ListTile(
                 title: const Text('Rider'),
                 leading: Radio(
-                  value: 1,
-                  groupValue: _userKind,
-                  onChanged: (int? value) {
+                  value: UserTyp.rider,
+                  groupValue: userType, //_userKind
+                  onChanged: (value) {
                     setState(() {
-                      _userKind = value!;
+                      userType = value!;
                     });
                   },
                 ),
@@ -97,7 +97,7 @@ class _RegisterState extends State<Register> {
                         email: email,
                         userName: username,
                         password: password,
-                        userType: _userKind);
+                        userType: userType);
                     if (result == null) {
                       {
                         print('error signing in');

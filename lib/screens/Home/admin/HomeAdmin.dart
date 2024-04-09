@@ -24,21 +24,23 @@ class _HomeAdminState extends State<HomeAdmin> {
                   final result = await _auth.signOut();
 
                   if (result == null) {
-                    context.read<UserProvider>().updateUid(result);
+                    context
+                        .read<UserProvider>()
+                        .updateUid(result, UserTyp.owner);
                     print("signed out");
                   } else {
                     print(result.toString());
                   }
                 },
-                child: Text("sign out"))
+                child: const Text("sign out"))
           ],
         ),
         body: orderList(),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.greenAccent,
           onPressed: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => OrderPage()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const OrderPage()));
           },
           child: const Icon(Icons.add),
         ));

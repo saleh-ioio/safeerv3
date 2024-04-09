@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:safeer/models/user.dart';
 
 class DataBaseService {
   final String uid;
@@ -42,6 +43,28 @@ class DataBaseService {
 
     return await userDoc.update({
       'orders': FieldValue.arrayUnion([orderData])
+    });
+  }
+
+  Future<bool?> checkUserExist(UserTyp userType, String email) async {
+    final docRef = userType == UserTyp.owner
+        ? userCollection
+        : userType == UserTyp.rider
+            ? riderCollection
+            : null;
+
+    if (docRef == null) {
+      return false;
+    }
+    return await userCollection
+        .where('email', isEqualTo: email)
+        .get()
+        .then((snapshot) {
+      if (snapshot.docs.isNotEmpty) {
+        return true;
+      } else {
+        return false;
+      }
     });
   }
 

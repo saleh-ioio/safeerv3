@@ -25,19 +25,45 @@ class _SignInState extends State<SignIn> {
 
   final _formKey = GlobalKey<FormState>();
 
+  UserTyp usertype = UserTyp.owner; // 0 for owner and 1 for rider
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sign in Screen'),
+        title: const Text('Sign in Screen'),
       ),
       body: Form(
         key: _formKey,
         child: Center(
           child: Column(
             children: [
+              ListTile(
+                title: const Text('Owner'),
+                leading: Radio(
+                  value: UserTyp.owner,
+                  groupValue: usertype,
+                  onChanged: (value) {
+                    setState(() {
+                      usertype = value!;
+                    });
+                  },
+                ),
+              ),
+              ListTile(
+                title: const Text('Rider'),
+                leading: Radio(
+                  value: UserTyp.rider,
+                  groupValue: usertype,
+                  onChanged: (value) {
+                    setState(() {
+                      usertype = value!;
+                    });
+                  },
+                ),
+              ),
               TextFormField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Email',
                 ),
                 validator: (val) => val!.isEmpty ? 'Enter an email' : null,
@@ -47,7 +73,7 @@ class _SignInState extends State<SignIn> {
                 },
               ),
               TextFormField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Password',
                 ),
                 validator: (val) =>
@@ -61,8 +87,8 @@ class _SignInState extends State<SignIn> {
               ElevatedButton(
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    dynamic result =
-                        await _auth.signInWithEmailAndPassword(email, password);
+                    dynamic result = await _auth.signInWithEmailAndPassword(
+                        email, password, usertype);
                     if (result == null) {
                       setState(() {
                         error = 'Could not sign in with those credentials';
@@ -71,18 +97,21 @@ class _SignInState extends State<SignIn> {
                       print('signed in');
                       print(result.uid);
 
-                      context.read<UserProvider>().updateUid(result.uid);
+                      context
+                          .read<UserProvider>()
+                          .updateUid(result.uid, usertype);
+
                       widget.toggleView();
                     }
                   }
                 },
-                child: Text('Sign in'),
+                child: const Text('Sign in'),
               ),
               TextButton(
                 onPressed: () {
                   widget.toggleView();
                 },
-                child: Text('Create a new account'),
+                child: const Text('Create a new account'),
               ),
             ],
           ),

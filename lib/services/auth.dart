@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:safeer/models/user.dart';
-import 'package:safeer/screens/authenticate/Register.dart';
+import 'package:safeer/screens/authenticate/register.dart';
 import 'package:safeer/services/dataBase.dart';
 
 // This class will be used to handle the authentication of the user
@@ -36,24 +36,21 @@ class AuthService {
       {required String email,
       required String userName,
       required String password,
-      required int userType}) async {
+      required UserTyp userType}) async {
     try {
       User? user;
 
-      if (userType == 0) {
+      UserCredential result = await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
+      user = result.user;
+
+      if (userType == UserTyp.owner) {
         // owner
-        UserCredential result = await _auth.createUserWithEmailAndPassword(
-            email: email, password: password);
-        user = result.user;
         DataBaseService(uid: user!.uid).updateOnwerUserData(userName, email);
       }
 
-      if (userType == 1) {
+      if (userType == UserTyp.rider) {
         // rider
-        UserCredential result = await _auth.createUserWithEmailAndPassword(
-            email: email, password: password);
-        user = result.user;
-
         DataBaseService(uid: user!.uid).updateRiderUserData(userName, email);
       }
 
@@ -65,11 +62,20 @@ class AuthService {
   }
 
 // sign in with email and password
-  Future signInWithEmailAndPassword(String email, String password) async {
+  Future signInWithEmailAndPassword(
+      String email, String password, UserTyp userType) async {
     try {
       UserCredential result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       User? user = result.user;
+
+      final isValidUser =
+          await DataBaseService(uid: user!.uid).checkUserExist(userType, email);
+      print(isValidUser);
+      if (isValidUser == false) {
+        return null;
+      }
+
       return _userFromFirebaseUser(user!);
     } catch (e) {
       print(e.toString());
