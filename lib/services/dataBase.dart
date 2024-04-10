@@ -71,4 +71,11 @@ class DataBaseService {
   Stream<DocumentSnapshot<Object?>> get orders {
     return userCollection.doc(uid).snapshots();
   }
+
+  Future<QuerySnapshot<Object?>> searchDriverQuery({required String email}) {
+    final result = riderCollection
+        .where("name", isGreaterThanOrEqualTo: email)
+        .where("name", isLessThanOrEqualTo: "${email}\uf7ff");
+    return result.get();
+  }
 }

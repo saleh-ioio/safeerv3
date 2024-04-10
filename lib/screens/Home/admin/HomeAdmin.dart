@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:safeer/models/user.dart';
 import 'package:safeer/screens/Home/admin/Order.dart';
+import 'package:safeer/screens/Home/admin/addDriverManage.dart';
 import 'package:safeer/services/auth.dart';
 import 'package:safeer/services/dataBase.dart';
 
@@ -20,6 +21,15 @@ class _HomeAdminState extends State<HomeAdmin> {
         appBar: AppBar(
           actions: [
             TextButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const AddDriverPage()));
+                },
+                child: const Text("Add Driver",
+                    style: TextStyle(color: Colors.white))),
+            TextButton(
                 onPressed: () async {
                   final result = await _auth.signOut();
 
@@ -32,7 +42,8 @@ class _HomeAdminState extends State<HomeAdmin> {
                     print(result.toString());
                   }
                 },
-                child: const Text("sign out"))
+                child: const Text("sign out",
+                    style: TextStyle(color: Colors.white)))
           ],
         ),
         body: orderList(),

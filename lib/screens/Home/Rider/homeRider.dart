@@ -12,12 +12,11 @@ class _HomeRiderPageState extends State<HomeRiderPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: Text("Home Rider")),
-        body: Column(children: [
-          Autocomplete<String>(
-            optionsBuilder: (textEditingValue) {
-              return ['a', 'b', 'c'];
-            },
-          )
-        ]));
+        body: Center(
+          child: TextButton(
+            onPressed: () {},
+            child: Text("home driver"),
+          ),
+        ));
   }
 }
