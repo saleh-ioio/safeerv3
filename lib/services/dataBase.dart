@@ -47,25 +47,29 @@ class DataBaseService {
   }
 
   Future<bool?> checkUserExist(UserTyp userType, String email) async {
-    final docRef = userType == UserTyp.owner
-        ? userCollection
-        : userType == UserTyp.rider
-            ? riderCollection
-            : null;
-
-    if (docRef == null) {
-      return false;
-    }
-    return await userCollection
-        .where('email', isEqualTo: email)
-        .get()
-        .then((snapshot) {
-      if (snapshot.docs.isNotEmpty) {
+    if (userType == UserTyp.owner) {
+      final result =
+          await userCollection.where('email', isEqualTo: email).get();
+      if (result.docs.isNotEmpty) {
         return true;
       } else {
+        print('User does not exist');
         return false;
       }
-    });
+    }
+
+    if (userType == UserTyp.rider) {
+      final result =
+          await riderCollection.where('email', isEqualTo: email).get();
+      if (result.docs.isNotEmpty) {
+        return true;
+      } else {
+        print('User does not exist');
+        return false;
+      }
+    }
+
+    print('User Type is not valid');
   }
 
   Stream<DocumentSnapshot<Object?>> get orders {

@@ -34,21 +34,6 @@ class _AddDriverPageState extends State<AddDriverPage> {
             print(resultList);
 
             return resultList;
-            // return ListView.builder(
-            //     itemCount: data.size,
-            //     itemBuilder: (context, index) {
-            //       final doc = data.docs[index];
-            //       return ListTile(
-            //         title: Text(doc['name']),
-            //         subtitle: Text(doc['email']),
-            //         trailing: IconButton(
-            //             onPressed: () async {
-            //               await DataBaseService(uid: context.read<UserProvider>().uid!).addDriverToOwner(
-            //                   driverUid: doc.id, driverEmail: doc['email']);
-            //             },
-            //             icon: const Icon(Icons.add)),
-            //       );
-            //     });
           }),
         ],
       ),
