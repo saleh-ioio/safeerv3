@@ -14,6 +14,9 @@ class AddDriverPage extends StatefulWidget {
 }
 
 class _AddDriverPageState extends State<AddDriverPage> {
+  List<Map<String, String>> driverListToAdd = [];
+  List<Map<String, String>> suggestedRider =
+      List<Map<String, String>>.empty(growable: true);
   String email = "";
   @override
   Widget build(BuildContext context) {
@@ -22,19 +25,44 @@ class _AddDriverPageState extends State<AddDriverPage> {
         title: Text("Add Driver"),
       ),
       body: Column(
-        children: [
-          Autocomplete<String>(optionsBuilder: (TextEditingValue value) async {
+        children: <Widget>[
+          Autocomplete<String>(onSelected: (option) {
+            driverListToAdd.add(suggestedRider
+                .firstWhere((element) => element.containsKey(option)));
+            suggestedRider.clear();
+            setState(() {});
+          }, optionsBuilder: (TextEditingValue value) async {
             final result =
                 await DataBaseService(uid: context.read<UserProvider>().uid!)
                     .searchDriverQuery(email: value.text);
 
-            List<String> resultList =
-                result.docs.map((e) => e['email'].toString()).toList();
+            List<String> resultList = result.docs.map((doc) {
+              suggestedRider.add({doc['email'].toString(): doc.id.toString()});
+              return doc['email'].toString();
+            }).toList();
 
             print(resultList);
 
             return resultList;
           }),
+          ListView.builder(
+              shrinkWrap: true,
+              itemCount: driverListToAdd.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(driverListToAdd[index].keys.first),
+                  trailing: IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () {
+                      driverListToAdd.removeAt(index);
+                      setState(() {});
+                    },
+                  ),
+                );
+              }),
+          TextButton(
+              onPressed: driverListToAdd.isEmpty == true ? null : () {},
+              child: Text("invite Drivers"))
         ],
       ),
     );
