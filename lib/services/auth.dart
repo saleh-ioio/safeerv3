@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:safeer/models/user.dart';
-import 'package:safeer/screens/authenticate/register.dart';
 import 'package:safeer/services/dataBase.dart';
 
 // This class will be used to handle the authentication of the user
@@ -76,7 +75,7 @@ class AuthService {
         return null;
       }
 
-      return _userFromFirebaseUser(user!);
+      return _userFromFirebaseUser(user);
     } catch (e) {
       print(e.toString());
       return null;

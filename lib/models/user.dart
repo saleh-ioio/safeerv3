@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:safeer/screens/authenticate/register.dart';
 
 enum UserTyp { owner, rider }
 
