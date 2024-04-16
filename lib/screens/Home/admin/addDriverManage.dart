@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
@@ -61,8 +59,19 @@ class _AddDriverPageState extends State<AddDriverPage> {
                 );
               }),
           TextButton(
-              onPressed: driverListToAdd.isEmpty == true ? null : () {},
-              child: Text("invite Drivers"))
+            onPressed: driverListToAdd.isEmpty == true
+                ? null
+                : () {
+                    driverListToAdd.forEach((element) {
+                      DataBaseService(uid: context.read<UserProvider>().uid!)
+                          .sendInvetation(element.values.first);
+                    });
+
+                    driverListToAdd.clear();
+                    setState(() {});
+                  },
+            child: Text("invite Drivers"),
+          ),
         ],
       ),
     );

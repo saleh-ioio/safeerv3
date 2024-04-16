@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:safeer/models/order.dart';
 import 'package:safeer/models/user.dart';
-import 'package:safeer/screens/Home/admin/Order.dart';
+import 'package:safeer/screens/Home/admin/Orderpage.dart';
 import 'package:safeer/screens/Home/admin/addDriverManage.dart';
 import 'package:safeer/services/auth.dart';
 import 'package:safeer/services/dataBase.dart';
@@ -71,7 +72,7 @@ class _HomeAdminState extends State<HomeAdmin> {
       stream: DataBaseService(uid: uid).orders,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          final orders = snapshot.data!['orders'];
+          final orders = snapshot.data as List<ClientOrder>?;
           if (orders == null) {
             return const Center(
               child: Text("No Orders"),
@@ -81,8 +82,8 @@ class _HomeAdminState extends State<HomeAdmin> {
             itemCount: orders.length,
             itemBuilder: (context, index) {
               return ListTile(
-                title: Text(orders[index]['clientName']),
-                subtitle: Text(orders[index]['address']),
+                title: Text(orders[index].clientName),
+                subtitle: Text(orders[index].address),
               );
             },
           );

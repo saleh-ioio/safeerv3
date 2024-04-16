@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:safeer/models/order.dart';
 import 'package:safeer/models/user.dart';
 
 class DataBaseService {
@@ -41,9 +42,23 @@ class DataBaseService {
       'totalPrice': totalPrice,
     };
 
-    return await userDoc.update({
-      'orders': FieldValue.arrayUnion([orderData])
-    });
+    await userDoc.collection('orders').add(orderData);
+
+    // return await userDoc.update({
+    //   'orders': FieldValue.arrayUnion([orderData])
+    // });
+  }
+
+  Future sendInvetation(String riderId) async {
+    await userCollection
+        .doc(uid)
+        .collection('invitations')
+        .add({'riderId': riderId, 'status': 'pending'});
+
+    return await riderCollection
+        .doc(riderId)
+        .collection('invitations')
+        .add({'OwnerId': uid, 'status': 'pending'});
   }
 
   Future<bool?> checkUserExist(UserTyp userType, String email) async {
@@ -70,10 +85,29 @@ class DataBaseService {
     }
 
     print('User Type is not valid');
+    return false;
   }
 
-  Stream<DocumentSnapshot<Object?>> get orders {
-    return userCollection.doc(uid).snapshots();
+  List<ClientOrder> _OrdersListFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.docs.map((doc) {
+      return ClientOrder(
+        id: doc.id,
+        clientName: doc['clientName'] ?? '',
+        address: doc['address'] ?? '',
+        phone: doc['phone'] ?? '',
+        locationLink: doc['locationLink'] ?? '',
+        paymentMethod: doc['paymentMethod'] ?? '',
+        totalPrice: doc['totalPrice'] ?? 0.0,
+      );
+    }).toList();
+  }
+
+  Stream<List<ClientOrder>> get orders {
+    return userCollection
+        .doc(uid)
+        .collection('orders')
+        .snapshots()
+        .map(_OrdersListFromSnapshot);
   }
 
   Future<QuerySnapshot<Object?>> searchDriverQuery({required String email}) {
