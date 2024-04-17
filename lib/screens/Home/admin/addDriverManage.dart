@@ -30,9 +30,10 @@ class _AddDriverPageState extends State<AddDriverPage> {
             suggestedRider.clear();
             setState(() {});
           }, optionsBuilder: (TextEditingValue value) async {
-            final result =
-                await DataBaseService(uid: context.read<UserProvider>().uid!)
-                    .searchDriverQuery(email: value.text);
+            final result = await DataBaseService(
+                    uid: context.read<UserProvider>().uid!,
+                    email: context.read<UserProvider>().email!)
+                .searchDriverQuery(email: value.text);
 
             List<String> resultList = result.docs.map((doc) {
               suggestedRider.add({doc['email'].toString(): doc.id.toString()});
@@ -63,8 +64,12 @@ class _AddDriverPageState extends State<AddDriverPage> {
                 ? null
                 : () {
                     driverListToAdd.forEach((element) {
-                      DataBaseService(uid: context.read<UserProvider>().uid!)
-                          .sendInvetation(element.values.first);
+                      DataBaseService(
+                              uid: context.read<UserProvider>().uid!,
+                              email: context.read<UserProvider>().email!)
+                          .sendInvetation(
+                              riderId: element.values.first,
+                              riderEmail: element.keys.first);
                     });
 
                     driverListToAdd.clear();

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:safeer/models/order.dart';
@@ -60,6 +61,7 @@ class _HomeAdminState extends State<HomeAdmin> {
 
   Widget orderList() {
     final uid = context.watch<UserProvider>().uid;
+    final email = context.watch<UserProvider>().email;
 
     if (uid == null) {
       return Container(
@@ -68,12 +70,17 @@ class _HomeAdminState extends State<HomeAdmin> {
         ),
       );
     }
-    return StreamBuilder(
-      stream: DataBaseService(uid: uid).orders,
+    return StreamBuilder<List<ClientOrder>>(
+      stream: DataBaseService(uid: uid, email: email!).orders,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final orders = snapshot.data as List<ClientOrder>?;
           if (orders == null) {
+            return const Center(
+              child: Text("No Orders"),
+            );
+          }
+          if (orders.length == 0) {
             return const Center(
               child: Text("No Orders"),
             );

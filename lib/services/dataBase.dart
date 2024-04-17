@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:safeer/models/invetation.dart';
 import 'package:safeer/models/order.dart';
 import 'package:safeer/models/user.dart';
 
 class DataBaseService {
   final String uid;
-  DataBaseService({required this.uid});
+  final String email;
+  DataBaseService({required this.uid, required this.email});
 
   final CollectionReference userCollection =
       FirebaseFirestore.instance.collection('owners-admins');
@@ -49,16 +51,15 @@ class DataBaseService {
     // });
   }
 
-  Future sendInvetation(String riderId) async {
-    await userCollection
-        .doc(uid)
-        .collection('invitations')
-        .add({'riderId': riderId, 'status': 'pending'});
+  Future sendInvetation(
+      {required String riderId, required String riderEmail}) async {
+    await userCollection.doc(uid).collection('fleetTable').add(
+        {'riderId': riderId, 'status': 'pending', 'riderEmail': riderEmail});
 
-    return await riderCollection
-        .doc(riderId)
-        .collection('invitations')
-        .add({'OwnerId': uid, 'status': 'pending'});
+    return await riderCollection.doc(riderId).collection('fleetTable').add({
+      'ownerId': uid,
+      'status': 'pending',
+    });
   }
 
   Future<bool?> checkUserExist(UserTyp userType, String email) async {
@@ -100,6 +101,26 @@ class DataBaseService {
         totalPrice: doc['totalPrice'] ?? 0.0,
       );
     }).toList();
+  }
+
+  List<Invitationclient> _InvetationsListFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.docs.map((doc) {
+      return Invitationclient(
+        onwerId: doc['ownerId'] ?? '',
+        Status: doc['status'] ?? '',
+      );
+    }).toList();
+  }
+
+  Stream<List<Invitationclient>> get invetations {
+    print('get invetations called');
+    final result = riderCollection
+        .doc(uid)
+        .collection('fleetTable')
+        .snapshots()
+        .map(_InvetationsListFromSnapshot);
+    print(result);
+    return result;
   }
 
   Stream<List<ClientOrder>> get orders {

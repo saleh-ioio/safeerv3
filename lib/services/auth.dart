@@ -8,7 +8,7 @@ class AuthService {
 
   // create user obj based on FirebaseUser
   UserProvider _userFromFirebaseUser(User user) {
-    return UserProvider(uid: user.uid);
+    return UserProvider(uid: user.uid, email: user.email);
   }
 
 // auth change user stream
@@ -45,12 +45,14 @@ class AuthService {
 
       if (userType == UserTyp.owner) {
         // owner
-        DataBaseService(uid: user!.uid).updateOnwerUserData(userName, email);
+        DataBaseService(uid: user!.uid, email: email)
+            .updateOnwerUserData(userName, email);
       }
 
       if (userType == UserTyp.rider) {
         // rider
-        DataBaseService(uid: user!.uid).updateRiderUserData(userName, email);
+        DataBaseService(uid: user!.uid, email: email)
+            .updateRiderUserData(userName, email);
       }
 
       return _userFromFirebaseUser(user!);
@@ -68,8 +70,8 @@ class AuthService {
           email: email, password: password);
       User? user = result.user;
 
-      final isValidUser =
-          await DataBaseService(uid: user!.uid).checkUserExist(userType, email);
+      final isValidUser = await DataBaseService(uid: user!.uid, email: email)
+          .checkUserExist(userType, email);
       print(isValidUser);
       if (isValidUser == false) {
         return null;

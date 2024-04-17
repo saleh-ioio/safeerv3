@@ -23,6 +23,7 @@ class _OrderPageState extends State<OrderPage> {
   @override
   Widget build(BuildContext context) {
     final userId = context.watch<UserProvider>().uid;
+    final email = context.watch<UserProvider>().email;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Order Page'),
@@ -145,13 +146,9 @@ class _OrderPageState extends State<OrderPage> {
                         'Location Link: $_locationLink\n'
                         'Payment Method: $_paymentMethod\n'
                         'Total Price: $_totalPrice\n');
-                    DataBaseService(uid: userId!).updateOrderData(
-                        _clientName,
-                        _address,
-                        _phone,
-                        _locationLink,
-                        _paymentMethod,
-                        _totalPrice);
+                    DataBaseService(uid: userId!, email: email!)
+                        .updateOrderData(_clientName, _address, _phone,
+                            _locationLink, _paymentMethod, _totalPrice);
                     Navigator.pop(context);
                   }
                 },

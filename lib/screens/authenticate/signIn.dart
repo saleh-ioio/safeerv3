@@ -99,7 +99,7 @@ class _SignInState extends State<SignIn> {
 
                       context
                           .read<UserProvider>()
-                          .updateUid(result.uid, usertype);
+                          .updateUid(result.uid, usertype, email: email);
 
                       widget.toggleView();
                     }
