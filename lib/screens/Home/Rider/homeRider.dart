@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:safeer/models/invetation.dart';
@@ -66,7 +65,7 @@ class _HomeRiderPageState extends State<HomeRiderPage> {
                       itemBuilder: (context, index) {
                         return ListTile(
                             title: Text(invetations[index].owenerEmail ?? ''),
-                            subtitle: Text(invetations[index].Status ?? ''),
+                            subtitle: Text(invetations[index].Status),
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
