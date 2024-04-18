@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:safeer/models/invetation.dart';
 import 'package:safeer/models/order.dart';
