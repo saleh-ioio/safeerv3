@@ -40,8 +40,6 @@ class _AddDriverPageState extends State<AddDriverPage> {
               return doc['email'].toString();
             }).toList();
 
-            print(resultList);
-
             return resultList;
           }),
           ListView.builder(

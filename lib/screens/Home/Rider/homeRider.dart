@@ -65,9 +65,45 @@ class _HomeRiderPageState extends State<HomeRiderPage> {
                       itemCount: invetations.length,
                       itemBuilder: (context, index) {
                         return ListTile(
-                          title: Text(invetations[index].onwerId ?? ''),
-                          subtitle: Text(invetations[index].Status ?? ''),
-                        );
+                            title: Text(invetations[index].owenerEmail ?? ''),
+                            subtitle: Text(invetations[index].Status ?? ''),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                TextButton(
+                                    onPressed: () {
+                                      final invite = invetations[index];
+                                      DataBaseService(
+                                              uid: user.uid!,
+                                              email: user.email!)
+                                          .updateInvetationStatus(
+                                              ownerId: invite.onwerId,
+                                              refrenceInOwner:
+                                                  invite.refrerenceInOwner,
+                                              refrenceInrider:
+                                                  invite.refrenceInRider,
+                                              status: StatusEnum.accepted);
+                                      print("accept");
+                                    },
+                                    child: Text("Accept")),
+                                TextButton(
+                                    onPressed: () {
+                                      final invite = invetations[index];
+                                      DataBaseService(
+                                              uid: user.uid!,
+                                              email: user.email!)
+                                          .updateInvetationStatus(
+                                              ownerId: invite.onwerId,
+                                              refrenceInOwner:
+                                                  invite.refrerenceInOwner,
+                                              refrenceInrider:
+                                                  invite.refrenceInRider,
+                                              status: StatusEnum.rejected);
+                                      print("reject");
+                                    },
+                                    child: Text("Reject"))
+                              ],
+                            ));
                       },
                     );
                   }

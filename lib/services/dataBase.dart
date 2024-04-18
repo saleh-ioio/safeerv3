@@ -1,7 +1,11 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:safeer/models/invetation.dart';
 import 'package:safeer/models/order.dart';
 import 'package:safeer/models/user.dart';
+
+enum StatusEnum { pending, accepted, rejected }
 
 class DataBaseService {
   final String uid;
@@ -31,6 +35,23 @@ class DataBaseService {
     });
   }
 
+  Future updateInvetationStatus(
+      {required String ownerId,
+      required StatusEnum status,
+      required String refrenceInrider,
+      required String refrenceInOwner}) async {
+    await userCollection
+        .doc(ownerId)
+        .collection('fleetTable')
+        .doc(refrenceInOwner)
+        .update({'status': status.name});
+    await riderCollection
+        .doc(uid)
+        .collection('fleetTable')
+        .doc(refrenceInrider)
+        .update({'status': status.name});
+  }
+
   Future updateOrderData(String clientName, String address, String phone,
       String locationLink, String paymentMethod, double totalPrice) async {
     DocumentReference userDoc = userCollection.doc(uid);
@@ -53,12 +74,20 @@ class DataBaseService {
 
   Future sendInvetation(
       {required String riderId, required String riderEmail}) async {
-    await userCollection.doc(uid).collection('fleetTable').add(
-        {'riderId': riderId, 'status': 'pending', 'riderEmail': riderEmail});
+    final refrence = await userCollection
+        .doc(uid)
+        .collection('fleetTable')
+        .add({
+      'riderId': riderId,
+      'status': StatusEnum.pending.name,
+      'riderEmail': riderEmail
+    });
 
     return await riderCollection.doc(riderId).collection('fleetTable').add({
       'ownerId': uid,
-      'status': 'pending',
+      'status': StatusEnum.pending.name,
+      'ownerEmail': email,
+      'refrence': refrence.id,
     });
   }
 
@@ -108,6 +137,10 @@ class DataBaseService {
       return Invitationclient(
         onwerId: doc['ownerId'] ?? '',
         Status: doc['status'] ?? '',
+        owenerEmail: doc['ownerEmail'] ?? '',
+        refrerenceInOwner: doc['refrence'] ?? '',
+        refrenceInRider: doc.id,
+        riderId: uid,
       );
     }).toList();
   }
