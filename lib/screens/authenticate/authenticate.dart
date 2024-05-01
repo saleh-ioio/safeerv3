@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:safeer/models/user.dart';
 import 'package:safeer/screens/authenticate/register.dart';
 import 'package:safeer/screens/authenticate/signIn.dart';
+import 'package:safeer/screens/welcomePage.dart';
 import 'package:safeer/services/auth.dart';
 
 class Authenticate extends StatefulWidget {
@@ -13,6 +14,7 @@ class Authenticate extends StatefulWidget {
 }
 
 class _AuthenticateState extends State<Authenticate> {
+  final firstEnter = true;
   final AuthService _auth = AuthService();
 
   // index's : true for sign in, false for register
@@ -26,7 +28,13 @@ class _AuthenticateState extends State<Authenticate> {
 
   @override
   Widget build(BuildContext context) {
-    return isSignIn
+
+    // if(firstEnter){
+    // return welcomePage();
+    // }
+    
+    return
+    isSignIn
         ? SignIn(
             toggleView: toggleView,
           )
