@@ -78,7 +78,6 @@ class _AuthenticateState extends State<Authenticate> {
         }else{ 
           return ChooseUserTypePage();
         }
-        return Scaffold(body:  Center(child: CircularProgressIndicator()));
       }}
     );
   }

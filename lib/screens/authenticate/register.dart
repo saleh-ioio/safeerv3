@@ -25,8 +25,6 @@ class _RegisterState extends State<Register> {
   String username = '';
   String error = '';
 
-  UserTyp userType = UserTyp.owner;
-
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -39,30 +37,6 @@ class _RegisterState extends State<Register> {
         child: Center(
           child: Column(
             children: [
-              ListTile(
-                title: const Text('Owner'),
-                leading: Radio<UserTyp>(
-                  value: UserTyp.owner,
-                  groupValue: userType, //_userKind,
-                  onChanged: (UserTyp? value) {
-                    setState(() {
-                      userType = value!;
-                    });
-                  },
-                ),
-              ),
-              ListTile(
-                title: const Text('Rider'),
-                leading: Radio(
-                  value: UserTyp.rider,
-                  groupValue: userType, //_userKind
-                  onChanged: (value) {
-                    setState(() {
-                      userType = value!;
-                    });
-                  },
-                ),
-              ),
               TextFormField(
                 decoration: InputDecoration(
                   hintText: 'Email',
@@ -102,7 +76,7 @@ class _RegisterState extends State<Register> {
                         email: email,
                         userName: username,
                         password: password,
-                        userType: userType);
+                        userType: widget.userType);
                     if (result == null) {
                       {
                         print('error signing in');
@@ -113,6 +87,12 @@ class _RegisterState extends State<Register> {
                     } else {
                       print('signed in');
                       print(result.uid);
+Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SignIn(usertype: widget.userType)),
+                  );
                     }
                   }
                 },
@@ -125,7 +105,7 @@ class _RegisterState extends State<Register> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => SignIn(usertype: userType)),
+                        builder: (context) => SignIn(usertype: widget.userType)),
                   );
                 },
                 child: Text('Sign in'),
