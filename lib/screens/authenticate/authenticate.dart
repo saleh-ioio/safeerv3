@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:safeer/models/user.dart';
+import 'package:safeer/screens/authenticate/chooseUserTypePage.dart';
 import 'package:safeer/screens/authenticate/register.dart';
 import 'package:safeer/screens/authenticate/signIn.dart';
 import 'package:safeer/screens/welcomePage.dart';
@@ -14,31 +15,39 @@ class Authenticate extends StatefulWidget {
 }
 
 class _AuthenticateState extends State<Authenticate> {
-  final firstEnter = true;
+  bool firstEnter = true;
   final AuthService _auth = AuthService();
 
   // index's : true for sign in, false for register
   bool isSignIn = true;
+  UserTyp? usertype = null; // 0 for owner and 1 for rider
 
-  void toggleView() {
+// toggle between sign in and register pages
+  void toggleBtwSignInAndRegister() {
     setState(() {
       isSignIn = !isSignIn;
     });
   }
 
+  
+
+  void skipWelcomePage() {
+    setState(() {
+      firstEnter = !firstEnter;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (firstEnter) {
+      return welcomePage(
+        toggleView: skipWelcomePage,
+      );
+    }
 
-    // if(firstEnter){
-    // return welcomePage();
-    // }
-    
-    return
-    isSignIn
-        ? SignIn(
-            toggleView: toggleView,
-          )
-        : Register(toggleView: toggleView);
+    return ChooseUserTyp(
+      
+    );
   }
 
   Widget annonymouslySignIn() {
