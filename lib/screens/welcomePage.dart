@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:safeer/models/appColors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class welcomePage extends StatefulWidget {
   final Function toggleView;
@@ -10,6 +11,9 @@ class welcomePage extends StatefulWidget {
 }
 
 class _welcomePageState extends State<welcomePage> {
+
+  
+  SharedPreferences? prefs;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,14 +55,14 @@ class _welcomePageState extends State<welcomePage> {
                   Text(
                     'Deliver with Precision, \n Every Time! ',
                     style: TextStyle(
-                      color: Color(AppColors.primary),
+                      color: AppColors.primary,
                       fontSize: 23,
                     ),
                   ),
                   Text(
                     'Start your journey to success ',
                     style: TextStyle(
-                      color: Color(AppColors.primary),
+                      color: AppColors.primary,
                       fontSize: 15,
                     ),
                   ),
@@ -72,13 +76,13 @@ class _welcomePageState extends State<welcomePage> {
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: Color(AppColors.darkgreen),
+                color: AppColors.darkgreen,
               ),
               child: TextButton(
                 child: const Text(
                   'Get Started',
                   style: TextStyle(
-                    color: Color(AppColors.primary),
+                    color: AppColors.primary,
                     fontSize: 15,
                   ),
                 ),

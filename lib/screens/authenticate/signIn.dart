@@ -1,14 +1,17 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:safeer/models/user.dart';
+import 'package:safeer/screens/authenticate/register.dart';
 import 'package:safeer/services/auth.dart';
 
 class SignIn extends StatefulWidget {
-  final Function toggleView;
+  final UserTyp usertype;
+
   const SignIn({
     Key? key,
-    required this.toggleView,
+    required this.usertype,
   }) : super(key: key);
 
   @override
@@ -25,10 +28,11 @@ class _SignInState extends State<SignIn> {
 
   final _formKey = GlobalKey<FormState>();
 
-  UserTyp usertype = UserTyp.owner; // 0 for owner and 1 for rider
+   // 0 for owner and 1 for rider
 
   @override
   Widget build(BuildContext context) {
+    print(widget.usertype.name);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Sign in Screen'),
@@ -38,30 +42,7 @@ class _SignInState extends State<SignIn> {
         child: Center(
           child: Column(
             children: [
-              ListTile(
-                title: const Text('Owner'),
-                leading: Radio(
-                  value: UserTyp.owner,
-                  groupValue: usertype,
-                  onChanged: (value) {
-                    setState(() {
-                      usertype = value!;
-                    });
-                  },
-                ),
-              ),
-              ListTile(
-                title: const Text('Rider'),
-                leading: Radio(
-                  value: UserTyp.rider,
-                  groupValue: usertype,
-                  onChanged: (value) {
-                    setState(() {
-                      usertype = value!;
-                    });
-                  },
-                ),
-              ),
+              Text(widget.usertype.name),
               TextFormField(
                 decoration: const InputDecoration(
                   hintText: 'Email',
@@ -88,7 +69,7 @@ class _SignInState extends State<SignIn> {
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     dynamic result = await _auth.signInWithEmailAndPassword(
-                        email, password, usertype);
+                        email, password, widget.usertype);
                     if (result == null) {
                       setState(() {
                         error = 'Could not sign in with those credentials';
@@ -99,9 +80,10 @@ class _SignInState extends State<SignIn> {
 
                       context
                           .read<UserProvider>()
-                          .updateUid(result.uid, usertype, email: email);
+                          .updateUid(result.uid, widget.usertype, email: email);
 
-                      widget.toggleView();
+                      Navigator.pop(context);
+
                     }
                   }
                 },
@@ -109,7 +91,12 @@ class _SignInState extends State<SignIn> {
               ),
               TextButton(
                 onPressed: () {
-                  widget.toggleView();
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Register(userType:widget.usertype)),
+                  );
                 },
                 child: const Text('Create a new account'),
               ),

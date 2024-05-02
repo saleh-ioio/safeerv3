@@ -1,10 +1,16 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+
 import 'package:safeer/models/user.dart';
+import 'package:safeer/screens/authenticate/signIn.dart';
 import 'package:safeer/services/auth.dart';
 
 class Register extends StatefulWidget {
-  final Function toggleView;
-  const Register({super.key, required this.toggleView});
+  final UserTyp userType;
+  const Register({
+    Key? key,
+    required this.userType,
+  }) : super(key: key);
 
   @override
   State<Register> createState() => _RegisterState();
@@ -107,7 +113,6 @@ class _RegisterState extends State<Register> {
                     } else {
                       print('signed in');
                       print(result.uid);
-                      widget.toggleView();
                     }
                   }
                 },
@@ -116,7 +121,12 @@ class _RegisterState extends State<Register> {
               Text("Already have an account?"),
               TextButton(
                 onPressed: () {
-                  widget.toggleView();
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SignIn(usertype: userType)),
+                  );
                 },
                 child: Text('Sign in'),
               ),

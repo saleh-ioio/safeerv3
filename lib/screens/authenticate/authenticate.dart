@@ -6,6 +6,7 @@ import 'package:safeer/screens/authenticate/register.dart';
 import 'package:safeer/screens/authenticate/signIn.dart';
 import 'package:safeer/screens/welcomePage.dart';
 import 'package:safeer/services/auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Authenticate extends StatefulWidget {
   const Authenticate({super.key});
@@ -15,7 +16,9 @@ class Authenticate extends StatefulWidget {
 }
 
 class _AuthenticateState extends State<Authenticate> {
-  bool firstEnter = true;
+  SharedPreferences? prefs;
+
+  
   final AuthService _auth = AuthService();
 
   // index's : true for sign in, false for register
@@ -29,24 +32,54 @@ class _AuthenticateState extends State<Authenticate> {
     });
   }
 
-  
-
   void skipWelcomePage() {
     setState(() {
-      firstEnter = !firstEnter;
+      prefs!.setBool('firstEnter', false);
     });
   }
 
+  Future<void> initPrefs() async {
+    prefs = await SharedPreferences.getInstance();
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    if (firstEnter) {
-      return welcomePage(
-        toggleView: skipWelcomePage,
-      );
-    }
+    return FutureBuilder(
+      future: initPrefs(),
+      builder: (context, snapshot) {
+        if(snapshot.connectionState == ConnectionState.waiting){
+          return  Scaffold(body:  Center(child: CircularProgressIndicator()));
+        }else{
 
-    return ChooseUserTyp(
-      
+        if (snapshot.hasError) {
+          return 
+          ChooseUserTypePage();
+        }
+
+
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (prefs!.getBool('firstEnter') == null ||
+              prefs!.getBool('firstEnter') == true) {
+            return welcomePage(
+              toggleView: skipWelcomePage,
+            );
+          }else{
+          print('success');
+          print(prefs!.getBool('firstEnter'));
+          return ChooseUserTypePage( resetWelcomePage: (){
+            setState(() {
+              prefs!.setBool('firstEnter', true);
+            });
+          },);
+
+
+          }
+        }else{ 
+          return ChooseUserTypePage();
+        }
+        return Scaffold(body:  Center(child: CircularProgressIndicator()));
+      }}
     );
   }
 
