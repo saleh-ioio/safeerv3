@@ -76,8 +76,7 @@ class _AuthenticateState extends State<Authenticate> {
         }else{ 
           return ChooseUserTypePage();
         }
-      }}
-    );
+      }});
   }
 
   Widget annonymouslySignIn() {

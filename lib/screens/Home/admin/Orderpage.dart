@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
+import 'package:safeer/models/rider.dart';
 import 'package:safeer/models/user.dart';
+import 'package:safeer/services/auth.dart';
 import 'package:safeer/services/dataBase.dart';
 
 class OrderPage extends StatefulWidget {
@@ -19,6 +21,17 @@ class _OrderPageState extends State<OrderPage> {
   String _locationLink = '';
   String _paymentMethod = '';
   double _totalPrice = 0.0;
+  String? riderId ;
+  List<Rider> _ListOfAvailableRiders  = [];
+
+
+  @override
+  void initState()async {
+    // TODO: implement initState
+    super.initState();
+
+    
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +46,18 @@ class _OrderPageState extends State<OrderPage> {
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
+              FutureBuilder(future: DataBaseService(uid: userId!, email: email! ).getAvailableRiders() , builder: (context, snapshot) {
+                if(snapshot.connectionState == ConnectionState.waiting){
+                  return  Center(child: CircularProgressIndicator());
+                }else{
+
+
+                  if(snapshot.hasError){
+                    return Text("Error: ${snapshot.error}");}
+
+                    return Center(child:  CircularProgressIndicator(),);
+                }
+              },),
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Client Name'),
                 validator: (value) {
@@ -66,7 +91,9 @@ class _OrderPageState extends State<OrderPage> {
                     _address = value;
                   });
                 },
-              ),
+              )
+              
+              ,
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Phone'),
                 validator: (value) {

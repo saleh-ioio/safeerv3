@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:safeer/models/invetation.dart';
 import 'package:safeer/models/order.dart';
+import 'package:safeer/models/rider.dart';
 import 'package:safeer/models/user.dart';
 
 enum StatusEnum { pending, accepted, rejected }
@@ -32,6 +33,8 @@ class DataBaseService {
       'orderId': [],
     });
   }
+
+
 
   Future updateInvetationStatus(
       {required String ownerId,
@@ -129,6 +132,31 @@ class DataBaseService {
       );
     }).toList();
   }
+
+  //converts a snopshot of riders to a list of available riders
+  List<Rider> _RidersListFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.docs.map((doc) {
+      return Rider(
+      fleetTableId: doc.id,
+      email: doc['riderEmail'] ?? '',
+      status: doc['status'] ?? '',
+      uid: doc['riderId'] ?? '',
+      );
+    }).toList();
+  }
+
+
+  //returns the list of Available Riders (accepted the invetation)
+  Future<List<Rider>> getAvailableRiders() async {
+    final result = await userCollection
+        .doc(uid)
+        .collection('fleetTable')
+        .where('status', isEqualTo: StatusEnum.accepted.name)
+        .get();
+    return _RidersListFromSnapshot(result);
+  }
+
+  
 
   List<Invitationclient> _InvetationsListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
