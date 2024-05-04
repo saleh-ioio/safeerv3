@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:safeer/models/order.dart';
 import 'package:safeer/models/user.dart';
-import 'package:safeer/screens/Home/admin/Orderpage.dart';
 import 'package:safeer/screens/Home/admin/addDriverManage.dart';
+import 'package:safeer/screens/Home/admin/orderpage.dart';
 import 'package:safeer/services/auth.dart';
 import 'package:safeer/services/dataBase.dart';
 
@@ -51,8 +51,9 @@ class _HomeAdminState extends State<HomeAdmin> {
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.greenAccent,
           onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const OrderPage()));
+            print('add order');
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => OrderPage()));
           },
           child: const Icon(Icons.add),
         ));

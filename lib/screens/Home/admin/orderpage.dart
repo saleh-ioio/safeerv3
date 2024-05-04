@@ -21,17 +21,10 @@ class _OrderPageState extends State<OrderPage> {
   String _locationLink = '';
   String _paymentMethod = '';
   double _totalPrice = 0.0;
-  String? riderId ;
-  //List<Rider> _ListOfAvailableRiders  = [];
-
-
-  @override
-  void initState()async {
-    // TODO: implement initState
-    super.initState();
-
-    
-  }
+  String? riderId;
+  List<Rider> _ListOfAvailableRiders = [];
+  String? dropDownValue = null;
+  late Rider selectedRider;
 
   @override
   Widget build(BuildContext context) {
@@ -46,18 +39,45 @@ class _OrderPageState extends State<OrderPage> {
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              // FutureBuilder(future: DataBaseService(uid: userId!, email: email! ).getAvailableRiders() , builder: (context, snapshot) {
-              //   if(snapshot.connectionState == ConnectionState.waiting){
-              //     return  Center(child: CircularProgressIndicator());
-              //   }else{
+              FutureBuilder(
+                future: DataBaseService(uid: userId!, email: email!)
+                    .getAvailableRiders(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else {
+                    if (snapshot.hasError) {
+                      return Text("Error: ${snapshot.error}");
+                    }
+                    if (snapshot.hasData) {
+                      _ListOfAvailableRiders = snapshot.data as List<Rider>;
+                      return DropdownButton<String>(
+                        value: dropDownValue,
+                        items: _ListOfAvailableRiders.map<
+                            DropdownMenuItem<String>>((value) {
+                          return DropdownMenuItem(
+                              onTap: () {
+                                selectedRider = value;
+                              },
+                              value: value.email,
+                              child: Text(value.email));
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            selectedRider = _ListOfAvailableRiders.firstWhere(
+                                (element) => element.email == value!);
+                            dropDownValue = selectedRider.email;
+                          });
+                        },
+                      );
+                    }
 
-
-              //     if(snapshot.hasError){
-              //       return Text("Error: ${snapshot.error}");}
-
-              //       return Center(child:  CircularProgressIndicator(),);
-              //   }
-              // },),
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                },
+              ),
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Client Name'),
                 validator: (value) {
@@ -91,9 +111,7 @@ class _OrderPageState extends State<OrderPage> {
                     _address = value;
                   });
                 },
-              )
-              
-              ,
+              ),
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Phone'),
                 validator: (value) {
