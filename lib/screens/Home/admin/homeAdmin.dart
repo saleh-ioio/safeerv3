@@ -18,6 +18,8 @@ class _HomeAdminState extends State<HomeAdmin> {
   final AuthService _auth = AuthService();
   @override
   Widget build(BuildContext context) {
+    final uid = context.watch<UserProvider>().uid;
+    final email = context.watch<UserProvider>().email;
     return Scaffold(
         appBar: AppBar(
           actions: [
@@ -50,10 +52,12 @@ class _HomeAdminState extends State<HomeAdmin> {
         body: orderList(),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.greenAccent,
-          onPressed: () {
-            print('add order');
+          onPressed: () async{
+
+final listOfAvailableRiders = await DataBaseService(uid: uid!, email: email!).getAvailableRiders();
+    
             Navigator.push(
-                context, MaterialPageRoute(builder: (context) => OrderPage()));
+                context, MaterialPageRoute(builder: (context) => OrderPage(listOfAvailableRiders: listOfAvailableRiders)));
           },
           child: const Icon(Icons.add),
         ));

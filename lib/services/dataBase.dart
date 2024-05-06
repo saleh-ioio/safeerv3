@@ -54,7 +54,7 @@ class DataBaseService {
   }
 
   Future updateOrderData(String clientName, String address, String phone,
-      String locationLink, String paymentMethod, double totalPrice) async {
+      String locationLink, String paymentMethod, double totalPrice, {Rider? rider}) async {
     DocumentReference userDoc = userCollection.doc(uid);
 
     Map<String, dynamic> orderData = {
@@ -64,6 +64,8 @@ class DataBaseService {
       'locationLink': locationLink,
       'paymentMethod': paymentMethod,
       'totalPrice': totalPrice,
+      'riderId' : rider?.uid, 
+      'riderEmail' : rider?.email,
     };
 
     await userDoc.collection('orders').add(orderData);

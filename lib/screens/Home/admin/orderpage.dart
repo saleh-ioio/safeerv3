@@ -7,7 +7,9 @@ import 'package:safeer/services/auth.dart';
 import 'package:safeer/services/dataBase.dart';
 
 class OrderPage extends StatefulWidget {
-  const OrderPage({super.key});
+  final List<Rider> listOfAvailableRiders;
+   OrderPage({super.key, required this.listOfAvailableRiders}) ;
+
 
   @override
   _OrderPageState createState() => _OrderPageState();
@@ -22,9 +24,9 @@ class _OrderPageState extends State<OrderPage> {
   String _paymentMethod = '';
   double _totalPrice = 0.0;
   String? riderId;
-  List<Rider> _ListOfAvailableRiders = [];
   String? dropDownValue = null;
-  late Rider selectedRider;
+   Rider? selectedRider;
+
 
   @override
   Widget build(BuildContext context) {
@@ -39,21 +41,9 @@ class _OrderPageState extends State<OrderPage> {
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              FutureBuilder(
-                future: DataBaseService(uid: userId!, email: email!)
-                    .getAvailableRiders(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  } else {
-                    if (snapshot.hasError) {
-                      return Text("Error: ${snapshot.error}");
-                    }
-                    if (snapshot.hasData) {
-                      _ListOfAvailableRiders = snapshot.data as List<Rider>;
-                      return DropdownButton<String>(
+         DropdownButton<String>(
                         value: dropDownValue,
-                        items: _ListOfAvailableRiders.map<
+                        items: widget.listOfAvailableRiders.map<
                             DropdownMenuItem<String>>((value) {
                           return DropdownMenuItem(
                               onTap: () {
@@ -64,20 +54,13 @@ class _OrderPageState extends State<OrderPage> {
                         }).toList(),
                         onChanged: (value) {
                           setState(() {
-                            selectedRider = _ListOfAvailableRiders.firstWhere(
+                            selectedRider = widget.listOfAvailableRiders.firstWhere(
                                 (element) => element.email == value!);
-                            dropDownValue = selectedRider.email;
+                            dropDownValue = selectedRider?.email ;
                           });
                         },
-                      );
-                    }
-
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                },
-              ),
+                      ),
+              
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Client Name'),
                 validator: (value) {
@@ -191,9 +174,12 @@ class _OrderPageState extends State<OrderPage> {
                         'Location Link: $_locationLink\n'
                         'Payment Method: $_paymentMethod\n'
                         'Total Price: $_totalPrice\n');
+
                     DataBaseService(uid: userId!, email: email!)
                         .updateOrderData(_clientName, _address, _phone,
-                            _locationLink, _paymentMethod, _totalPrice);
+                            _locationLink, _paymentMethod, _totalPrice, rider: selectedRider);
+
+                    
                     Navigator.pop(context);
                   }
                 },
