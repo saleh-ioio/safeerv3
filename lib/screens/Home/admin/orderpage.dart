@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:safeer/models/rider.dart';
 import 'package:safeer/models/user.dart';
-import 'package:safeer/services/auth.dart';
 import 'package:safeer/services/dataBase.dart';
 
 class OrderPage extends StatefulWidget {

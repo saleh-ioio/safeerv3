@@ -74,6 +74,7 @@ final listOfAvailableRiders = await DataBaseService(uid: uid!, email: email!).ge
         ),
       );
     }
+
     return StreamBuilder<List<ClientOrder>>(
       stream: DataBaseService(uid: uid, email: email!).orders,
       builder: (context, snapshot) {
@@ -95,6 +96,7 @@ final listOfAvailableRiders = await DataBaseService(uid: uid!, email: email!).ge
               return ListTile(
                 title: Text(orders[index].clientName),
                 subtitle: Text(orders[index].address),
+                
               );
             },
           );

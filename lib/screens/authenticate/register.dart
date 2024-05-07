@@ -38,7 +38,7 @@ class _RegisterState extends State<Register> {
           child: Column(
             children: [
               TextFormField(
-                decoration: InputDecoration(
+                decoration:const  InputDecoration(
                   hintText: 'Email',
                 ),
                 validator: (val) => val!.isEmpty ? 'Enter an email' : null,
@@ -48,7 +48,7 @@ class _RegisterState extends State<Register> {
                 },
               ),
               TextFormField(
-                decoration: InputDecoration(
+                decoration: const  InputDecoration(
                   hintText: 'UserName',
                 ),
                 validator: (val) => val!.isEmpty ? 'Enter a UserName' : null,
@@ -58,7 +58,7 @@ class _RegisterState extends State<Register> {
                 },
               ),
               TextFormField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Password',
                 ),
                 validator: (val) =>
@@ -87,12 +87,13 @@ class _RegisterState extends State<Register> {
                     } else {
                       print('signed in');
                       print(result.uid);
-Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => SignIn(usertype: widget.userType)),
-                  );
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                SignIn(usertype: widget.userType)),
+                      );
                     }
                   }
                 },
@@ -105,7 +106,8 @@ Navigator.pop(context);
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => SignIn(usertype: widget.userType)),
+                        builder: (context) =>
+                            SignIn(usertype: widget.userType)),
                   );
                 },
                 child: Text('Sign in'),

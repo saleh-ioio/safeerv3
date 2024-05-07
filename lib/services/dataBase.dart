@@ -68,8 +68,19 @@ class DataBaseService {
       'riderEmail' : rider?.email,
     };
 
-    await userDoc.collection('orders').add(orderData);
+    final orderIdInAdmin = await userDoc.collection('orders').add(orderData);
 
+    
+
+    if(rider != null){
+      Map<String, dynamic> orderDataRef = {
+      'orderId': orderIdInAdmin.id,
+      'adminId': uid, 
+      'AdminEmail': email,
+      };
+
+    final orderIdInrider = await riderCollection.doc(rider.uid).collection('orders').add(orderDataRef);
+    }
     // return await userDoc.update({
     //   'orders': FieldValue.arrayUnion([orderData])
     // });
@@ -131,9 +142,12 @@ class DataBaseService {
         locationLink: doc['locationLink'] ?? '',
         paymentMethod: doc['paymentMethod'] ?? '',
         totalPrice: doc['totalPrice'] ?? 0.0,
+        
       );
     }).toList();
   }
+
+  
 
   //converts a snopshot of riders to a list of available riders
   List<Rider> _RidersListFromSnapshot(QuerySnapshot snapshot) {

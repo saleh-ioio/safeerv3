@@ -41,6 +41,7 @@ class AuthService {
 
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
+          result.user!.sendEmailVerification();
       user = result.user;
 
       if (userType == UserTyp.owner) {
