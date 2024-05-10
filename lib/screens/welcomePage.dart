@@ -18,7 +18,7 @@ class _welcomePageState extends State<welcomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Color(0xFF1CFE8E4),
-        body: Stack(children: [
+      body: Stack(children: [
           Positioned(
             top: 0,
             left: 100,
