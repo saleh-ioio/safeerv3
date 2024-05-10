@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/widgets.dart';
 import 'package:safeer/models/invetation.dart';
 import 'package:safeer/models/order.dart';
 import 'package:safeer/models/rider.dart';
@@ -206,10 +207,30 @@ class DataBaseService {
         .map(_OrdersListFromSnapshot);
   }
 
+  Future<ClientOrder> getOrder({required String adminId, required String orderId}){
+    return userCollection.doc(adminId).collection('orders').doc(orderId).get().then((value) => ClientOrder(
+      id: value.id,
+      clientName: value['clientName'] ?? '',
+      address: value['address'] ?? '',
+      phone: value['phone'] ?? '',
+      locationLink: value['locationLink'] ?? '',
+      paymentMethod: value['paymentMethod'] ?? '',
+      totalPrice: value['totalPrice'] ?? 0.0,
+    ));
+  }
+
+
+
   Future<QuerySnapshot<Object?>> searchDriverQuery({required String email}) {
     final result = riderCollection
         .where("name", isGreaterThanOrEqualTo: email)
         .where("name", isLessThanOrEqualTo: "${email}\uf7ff");
     return result.get();
   }
+
+  Stream<List<dynamic>> ordersOnRider(){
+    return riderCollection.doc(uid).collection('orders').snapshots().map((event) => event.docs.map((e) => e.data()).toList());
+  }
+  
 }
+

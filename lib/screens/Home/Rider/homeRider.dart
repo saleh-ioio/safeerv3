@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:safeer/models/invetation.dart';
 import 'package:safeer/models/user.dart';
+import 'package:safeer/screens/Home/Rider/ordersWidget.dart';
 import 'package:safeer/services/auth.dart';
 import 'package:safeer/services/dataBase.dart';
 
@@ -110,7 +111,10 @@ class _HomeRiderPageState extends State<HomeRiderPage> {
                   return const Center(child: CircularProgressIndicator());
                 }
               },
-            )
+            ),
+            Divider()
+            ,
+           ordersList()
           ],
         ));
   }
