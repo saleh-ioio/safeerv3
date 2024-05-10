@@ -174,7 +174,7 @@ class _RegisterState extends State<Register> {
                       child: Text('Register', style: TextStyle(color: AppColors.lightyellow), ),
                     ),
                   ),
-                  Text("Already have an account?"),
+                  Row(children: [Text("Already have an account?" ),
                   TextButton(
                     onPressed: () {
                       Navigator.pop(context);
@@ -185,9 +185,9 @@ class _RegisterState extends State<Register> {
                                 SignIn(usertype: widget.userType)),
                       );
                     },
-                    child: Text('Sign in', style: TextStyle(color: AppColors.darkergreen), ),
+                    child: Text('Sign in', style: TextStyle(color: AppColors.darkergreen, fontWeight: FontWeight.bold ,fontSize:  20), ),
                   ),
-                ],
+],)                 ],
               ),
             ),
           ),
