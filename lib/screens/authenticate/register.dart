@@ -76,128 +76,156 @@ class _RegisterState extends State<Register> {
         ),
         Positioned(
           top: MediaQuery.of(context).size.height / 3.3,
-          right: MediaQuery.of(context).size.width / 6,
-          width: MediaQuery.of(context).size.width / 1.5,
-          height: MediaQuery.of(context).size.height / 1.5,
+          right: 0,
+          left: 0,
           child: isLoading == false
-              ? Form(
-                  key: _formKey,
-                  child: Center(
-                    child: Column(
-                      children: [
-                        Icon(
-                          widget.userType == UserTyp.owner
-                              ? Icons.business
-                              : Icons.delivery_dining,
-                          size: 60,
-                          color: AppColors.darkergreen,
-                        ),
-
-                          Text(widget.userType.name, style: TextStyle(fontSize: 15 ,fontWeight: FontWeight.bold ,color:AppColors.darkgreen )),
-                        
-                        Container(
-                          margin: EdgeInsets.symmetric(vertical: 10),
-                          child: Text(
-                            "Sign UP",
-                            style: TextStyle(
-                                color: AppColors.darkergreen,
-                                fontSize: 30,
-                                fontWeight: FontWeight.bold),
+              ? Container(
+                  margin: EdgeInsets.symmetric(horizontal: 65),
+                child: Form(
+                    key: _formKey,
+                    child: Center(
+                      child: Column(
+                        children: [
+                          Icon(
+                            widget.userType == UserTyp.owner
+                                ? Icons.business
+                                : Icons.delivery_dining,
+                            size: 60,
+                            color: AppColors.darkergreen,
                           ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(bottom: 10),
-                          child: TextFormField(
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(15)),
-                                borderSide: BorderSide(
-                                    color: AppColors.darkergreen,
-                                    width: 2.0), // Change this line
+                
+                            Text(widget.userType.name, style: TextStyle(fontSize: 15 ,fontWeight: FontWeight.bold ,color:AppColors.darkgreen )),
+                          
+                          Container(
+                            margin: EdgeInsets.symmetric(vertical: 10),
+                            child: Text(
+                              "Sign UP",
+                              style: TextStyle(
+                                  color: AppColors.darkergreen,
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(bottom: 10),
+                            child: TextFormField(
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(15)),
+                                  borderSide: BorderSide(
+                                      color: AppColors.darkergreen,
+                                      width: 2.0), // Change this line
+                                ),
+                                labelText: 'Email',
                               ),
-                              labelText: 'Email',
+                              validator: (val) =>
+                                  val!.isEmpty ? 'Enter an email' : null,
+                              onChanged: (val) {
+                                email = val;
+                                setState(() {});
+                              },
                             ),
-                            validator: (val) =>
-                                val!.isEmpty ? 'Enter an email' : null,
-                            onChanged: (val) {
-                              email = val;
-                              setState(() {});
-                            },
                           ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(bottom: 10),
-                          child: TextFormField(
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(15)),
-                                borderSide: BorderSide(
-                                    color: AppColors.red,
-                                    width: 10.0), // Change this line
+                          Container(
+                            margin: EdgeInsets.only(bottom: 10),
+                            child: TextFormField(
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(15)),
+                                  borderSide: BorderSide(
+                                      color: AppColors.red,
+                                      width: 10.0), // Change this line
+                                ),
+                                labelText: 'UserName',
                               ),
-                              labelText: 'UserName',
+                              validator: (val) =>
+                                  val!.isEmpty ? 'Enter a UserName' : null,
+                              onChanged: (val) {
+                                username = val;
+                                setState(() {});
+                              },
                             ),
-                            validator: (val) =>
-                                val!.isEmpty ? 'Enter a UserName' : null,
-                            onChanged: (val) {
-                              username = val;
-                              setState(() {});
-                            },
                           ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(bottom: 10),
-                          child: TextFormField(
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(15)),
+                          Container(
+                            margin: EdgeInsets.only(bottom: 10),
+                            child: TextFormField(
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(15)),
+                                ),
+                                labelText: 'Password',
                               ),
-                              labelText: 'Password',
+                              validator: (val) => val!.length < 6
+                                  ? 'Enter a password 6+ chars long'
+                                  : null,
+                              obscureText: true,
+                              onChanged: (val) {
+                                setState(() {});
+                                password = val;
+                              },
                             ),
-                            validator: (val) => val!.length < 6
-                                ? 'Enter a password 6+ chars long'
-                                : null,
-                            obscureText: true,
-                            onChanged: (val) {
-                              setState(() {});
-                              password = val;
-                            },
                           ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(bottom: 10),
-                          child: ElevatedButton(
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  AppColors.darkergreen),
-                            ),
-                            onPressed: () async {
-                              if (_formKey.currentState!.validate()) {
-                                setState(() {
-                                  isLoading = true;
-                                });
-                                dynamic result =
-                                    await _auth.registerWithEmailAndPassword(
-                                        email: email,
-                                        userName: username,
-                                        password: password,
-                                        userType: widget.userType);
-                                setState(() {
-                                  isLoading = false;
-                                });
-                                if (result == null) {
-                                  {
-                                    print('error signing in');
-                                    setState(() {
-                                      error = 'Please supply a valid email';
-                                    });
+                          Container(
+                            margin: EdgeInsets.only(bottom: 10),
+                            child: ElevatedButton(
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all<Color>(
+                                    AppColors.darkergreen),
+                              ),
+                              onPressed: () async {
+                                if (_formKey.currentState!.validate()) {
+                                  setState(() {
+                                    isLoading = true;
+                                  });
+                                  dynamic result =
+                                      await _auth.registerWithEmailAndPassword(
+                                          email: email,
+                                          userName: username,
+                                          password: password,
+                                          userType: widget.userType);
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                  if (result == null) {
+                                    {
+                                      print('error signing in');
+                                      setState(() {
+                                        error = 'Please supply a valid email';
+                                      });
+                                    }
+                                  } else {
+                                    print('signed in');
+                                    print(result.uid);
+                                    Navigator.pop(context);
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              SignIn(usertype: widget.userType)),
+                                    );
                                   }
-                                } else {
-                                  print('signed in');
-                                  print(result.uid);
+                                }
+                              },
+                              child: Container(
+                                  margin: EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 15),
+                                  child: Text(
+                                    'Register',
+                                    style: TextStyle(
+                                        color: AppColors.lightyellow,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 17),
+                                  )),
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              Text("Already have an account?"),
+                              TextButton(
+                                onPressed: () {
                                   Navigator.pop(context);
                                   Navigator.push(
                                     context,
@@ -205,48 +233,22 @@ class _RegisterState extends State<Register> {
                                         builder: (context) =>
                                             SignIn(usertype: widget.userType)),
                                   );
-                                }
-                              }
-                            },
-                            child: Container(
-                                margin: EdgeInsets.symmetric(
-                                    vertical: 10, horizontal: 15),
+                                },
                                 child: Text(
-                                  'Register',
+                                  'Sign in',
                                   style: TextStyle(
-                                      color: AppColors.lightyellow,
+                                      color: AppColors.darkergreen,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 17),
-                                )),
-                          ),
-                        ),
-                        Row(
-                          children: [
-                            Text("Already have an account?"),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          SignIn(usertype: widget.userType)),
-                                );
-                              },
-                              child: Text(
-                                'Sign in',
-                                style: TextStyle(
-                                    color: AppColors.darkergreen,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20),
+                                      fontSize: 20),
+                                ),
                               ),
-                            ),
-                          ],
-                        )
-                      ],
+                            ],
+                          )
+                        ],
+                      ),
                     ),
                   ),
-                )
+              )
               : Center(
                   child: LoadingAnimationWidget.staggeredDotsWave(
                       color: AppColors.darkergreen, size: 40),
