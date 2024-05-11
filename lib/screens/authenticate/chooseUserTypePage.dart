@@ -90,12 +90,21 @@ class _ChooseUserTypePageState extends State<ChooseUserTypePage> {
                     ),
                   );
                 },
-                child: Text(
-                  'Admin',
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w900,
-                      color: AppColors.darkergreen),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Icon(Icons.business, color: AppColors.darkergreen),
+                    ),
+                    Text(
+                      'Admin',
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w900,
+                          color: AppColors.darkergreen),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -119,12 +128,22 @@ class _ChooseUserTypePageState extends State<ChooseUserTypePage> {
                             )),
                   );
                 },
-                child: Text(
-                  'Rider',
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.white),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Icon(Icons.delivery_dining,
+                          color: Colors.white),
+                    ),
+                    Text(
+                      'Rider',
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.white),
+                    ),
+                  ],
                 ),
               ),
             ),
