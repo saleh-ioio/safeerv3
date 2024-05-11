@@ -33,14 +33,7 @@ class _RegisterState extends State<Register> {
     return Scaffold(
       backgroundColor: AppColors.primary,
       body: Stack(children: [
-        Positioned(
-          top: MediaQuery.of(context).size.height / 2,
-          left: MediaQuery.of(context).size.width / 2.5,
-          width: 20,
-          height: 20,
-          child: TextButton(onPressed: () {
-            Navigator.pop(context);
-          }, child: Text("back")),),
+        
         Positioned(
           left: 0,
           top: 0,
@@ -90,6 +83,7 @@ class _RegisterState extends State<Register> {
             child: Center(
               child: Column(
                 children: [
+                  Icon(widget.userType == UserTyp.owner ? Icons.business : Icons.delivery_dining, size: 60, color: AppColors.darkergreen,),
                   Text("Sign UP", style: TextStyle(color: AppColors.darkergreen, fontSize: 40 , fontWeight: FontWeight.bold),),
                   Container(
                     
@@ -171,7 +165,7 @@ class _RegisterState extends State<Register> {
                           }
                         }
                       },
-                      child: Text('Register', style: TextStyle(color: AppColors.lightyellow), ),
+                      child: Container(margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15), child: Text('Register', style: TextStyle(color: AppColors.lightyellow, fontWeight: FontWeight.bold, fontSize: 17), )),
                     ),
                   ),
                   Row(children: [Text("Already have an account?" ),
@@ -192,6 +186,15 @@ class _RegisterState extends State<Register> {
             ),
           ),
         ),
+Positioned(
+          top: 20,
+          left: 5,
+          child: TextButton(onPressed: () {
+            Navigator.pop(context);
+          }, child: Container(
+          width: 100,
+          height: 100,
+            child: Icon(Icons.arrow_back , color: AppColors.darkergreen,))),)
       ]),
     );
   }
