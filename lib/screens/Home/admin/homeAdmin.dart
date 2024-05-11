@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlng/latlng.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:safeer/models/appColors.dart';
@@ -93,16 +95,22 @@ showModalBottomSheet(
                   topRight: Radius.circular(20),
                 ),
               ),
-              child: ListView.builder(
-                shrinkWrap: true,
-                controller: scrollController,
-                itemCount: 25,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text('Item $index'),
-                  );
-                },
-              ),
+              child: 
+              FlutterMap(
+                options: MapOptions(
+                  
+                ),
+                children: [],)
+              // ListView.builder(
+              //   shrinkWrap: true,
+              //   controller: scrollController,
+              //   itemCount: 25,
+              //   itemBuilder: (context, index) {
+              //     return ListTile(
+              //       title: Text('Item $index'),
+              //     );
+              //   },
+              // ),
             ),
           );
         },
