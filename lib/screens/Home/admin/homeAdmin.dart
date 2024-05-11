@@ -36,20 +36,20 @@ return AppBar(
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
           actions: [
-            IconButton(onPressed:()async {
+  //           IconButton(onPressed:()async {
               
-                final listOfAvailableRiders =
-                    await DataBaseService(uid: uid!, email: email!)
-                        .getAvailableRiders();
+  //               final listOfAvailableRiders =
+  //                   await DataBaseService(uid: uid!, email: email!)
+  //                       .getAvailableRiders();
         
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => OrderPage(
-                            listOfAvailableRiders: listOfAvailableRiders)));
+  //               Navigator.push(
+  //                   context,
+  //                   MaterialPageRoute(
+  //                       builder: (context) => OrderPage(
+  //                           listOfAvailableRiders: listOfAvailableRiders)));
               
 
-   } , icon: Icon(Icons.add)),
+  //  } , icon: Icon(Icons.add)),
             IconButton(
               onPressed: () {
                 setState(() {});
@@ -109,39 +109,39 @@ showModalBottomSheet(
       ),
     ),
   );
-  // showModalBottomSheet(
-  //   context: context,
-  //   isScrollControlled: true,
-  //   useRootNavigator: true,
-  //   backgroundColor: Colors.transparent,
-  //   builder: (context) => DraggableScrollableSheet(
-  //     shouldCloseOnMinExtent: true,
-  //     minChildSize: 0.1,
-  //     initialChildSize: 0.1,
-  //     maxChildSize: 0.6,
-  //     builder: (context, scrollController) {
-  //       return Container(
-  //         decoration: BoxDecoration(
-  //           color: AppColors.primary,
-  //           borderRadius: BorderRadius.only(
-  //             topLeft: Radius.circular(20),
-  //             topRight: Radius.circular(20),
-  //           ),
-  //         ),
-  //         child: ListView.builder(
-  //           shrinkWrap: true,
-  //           controller: scrollController,
-  //           itemCount: 25,
-  //           itemBuilder: (context, index) {
-  //             return ListTile(
-  //               title: Text('Item $index'),
-  //             );
-  //           },
-  //         ),
-  //       );
-  //     },
-  //   ),
-  // );
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    useRootNavigator: true,
+    backgroundColor: Colors.transparent,
+    builder: (context) => DraggableScrollableSheet(
+      shouldCloseOnMinExtent: true,
+      minChildSize: 0.1,
+      initialChildSize: 0.1,
+      maxChildSize: 0.6,
+      builder: (context, scrollController) {
+        return Container(
+          decoration: BoxDecoration(
+            color: AppColors.primary,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+          ),
+          child: ListView.builder(
+            shrinkWrap: true,
+            controller: scrollController,
+            itemCount: 25,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text('Item $index'),
+              );
+            },
+          ),
+        );
+      },
+    ),
+  );
 }
     // buildBottomSheet(){
     //   return DraggableScrollableSheet(
@@ -178,8 +178,8 @@ showModalBottomSheet(
     final uid = context.watch<UserProvider>().uid;
     final email = context.watch<UserProvider>().email;
     return
-    //  Stack(
-    //   children:[
+     Stack(
+      children:[
          Scaffold(
         
       
@@ -193,42 +193,42 @@ showModalBottomSheet(
             BottomNavigationBarItem(icon: Icon(Icons.manage_accounts), label: "Menage Fleet"),
           ],),
           
-          );
-//           ,
-// selectedPage == onwerPages.orders ?
-//   Positioned(
-//     right: 18,
-//     bottom: MediaQuery.of(context).size.height / 22,
-//     child: FloatingActionButton(
-//               backgroundColor: AppColors.green,
-//               onPressed: () async {
-//                 final listOfAvailableRiders =
-//                     await DataBaseService(uid: uid!, email: email!)
-//                         .getAvailableRiders();
+          ),
+          
+selectedPage == onwerPages.orders ?
+  Positioned(
+    right: 18,
+    bottom: MediaQuery.of(context).size.height / 22,
+    child: FloatingActionButton(
+              backgroundColor: AppColors.green,
+              onPressed: () async {
+                final listOfAvailableRiders =
+                    await DataBaseService(uid: uid!, email: email!)
+                        .getAvailableRiders();
         
-//                 Navigator.push(
-//                     context,
-//                     MaterialPageRoute(
-//                         builder: (context) => OrderPage(
-//                             listOfAvailableRiders: listOfAvailableRiders)));
-//               },
-//               child: const Icon(Icons.add),
-//             ),
-//   ): Container(),
-//   selectedPage == onwerPages.orders ? Positioned( 
-//     right: 18,
-//     bottom: MediaQuery.of(context).size.height / 8,
-//     child: 
-//   FloatingActionButton(
-//     onPressed: () {
-//       openBottomSheet(context);
-//     },
-//     child: const Icon(Icons.map),
-//   )
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => OrderPage(
+                            listOfAvailableRiders: listOfAvailableRiders)));
+              },
+              child: const Icon(Icons.add),
+            ),
+  ): Container(),
+  selectedPage == onwerPages.orders ? Positioned( 
+    right: 18,
+    bottom: MediaQuery.of(context).size.height / 8,
+    child: 
+  FloatingActionButton(
+    onPressed: () {
+      openBottomSheet(context);
+    },
+    child: const Icon(Icons.map),
+  )
 
 
-//    ): Container(),
-//   ] );
+   ): Container(),
+  ] );
 
  
   }
