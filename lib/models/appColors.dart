@@ -5,6 +5,7 @@ class AppColors {
  static const darkgreen = Color(0xFF27847B) ;
  static const backgroundForm = Color(0xFF27847B) ;
  static const lightGreen = Color(0xFF86CCC5) ;
+  static const green= Color(0xFF4BA199) ;
 
  static const darkergreen = Color(0xFF175C55);
   static const lightyellow = Color(0xFFEEE8A9);
