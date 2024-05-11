@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:safeer/models/appColors.dart';
 
@@ -27,6 +28,8 @@ class _SignInState extends State<SignIn> {
   String password = '';
   String error = '';
 
+  bool isLoading = false;
+
   final _formKey = GlobalKey<FormState>();
 
    // 0 for owner and 1 for rider
@@ -37,7 +40,7 @@ class _SignInState extends State<SignIn> {
     return Scaffold(
       backgroundColor: AppColors.primary,
       
-      body: Stack(
+      body:  Stack(
         children :[
  Positioned(
           left: 0,
@@ -84,7 +87,7 @@ class _SignInState extends State<SignIn> {
           top: MediaQuery.of(context).size.height /3,
           width: MediaQuery.of(context).size.width /2,
           height: MediaQuery.of(context).size.height /2,
-          child: Form(
+          child: isLoading == false ? Form(
             key: _formKey,
             child: Center(
               child: Column(
@@ -126,8 +129,12 @@ class _SignInState extends State<SignIn> {
                     ),
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
+                        setState(() {
+                          isLoading = true;
+                        });
                         dynamic result = await _auth.signInWithEmailAndPassword(
                             email, password, widget.usertype);
+                            isLoading = false;
                         if (result == null) {
                           setState(() {
                             error = 'Could not sign in with those credentials';
@@ -161,7 +168,7 @@ class _SignInState extends State<SignIn> {
                 ],
               ),
             ),
-          ),
+          ) : Center(child: LoadingAnimationWidget.staggeredDotsWave(color: AppColors.darkergreen, size: 40),)
         ),
 Positioned(
           top: 20,
@@ -173,7 +180,7 @@ Positioned(
           height: 100,
             child: Icon(Icons.arrow_back , color: AppColors.yellow,))),)
         ]
-      ),
+      ) ,
     );
   }
 }
