@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 
 class AppColors {
  static const primary = Color(0xFFCFE8E4);
-  static const offWhite = Color(0xFFEBE9E9);
+  static const offWhite = Color.fromARGB(207, 189, 228, 228);
 
   static const green= Color(0xFF4BA199) ;
  static const darkgreen = Color(0xFF27847B) ;
  static const darkergreen = Color(0xFF175C55);
  static const lightGreen = Color(0xFF86CCC5) ;
+ static const red = Color.fromARGB(255, 167, 74, 74) ;
+ static const lightred = Color.fromARGB(255, 255, 206, 206) ;
 
  static const backgroundForm = Color(0xFF27847B) ;
   static const lightbackgroundButton = Color(0xFFCFE8E4);

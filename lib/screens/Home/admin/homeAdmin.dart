@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:safeer/models/appColors.dart';
 import 'package:safeer/models/order.dart';
@@ -61,8 +62,12 @@ return AppBar(
         backgroundColor: AppColors.primary,
         drawer: DrawerBuild(email),
         appBar: appBarBuild(),
-        body: orderList(),
-        floatingActionButton: FloatingActionButton(
+        body: selectedPage == onwerPages.orders ? orderList() : selectedPage ==  onwerPages.fleetManagement ? const AddDriverPage() : Container(),
+        bottomNavigationBar: selectedPage != onwerPages.fleetManagement ? null :BottomNavigationBar(items: [
+          BottomNavigationBarItem(icon: Icon(Icons.group_add), label: "Add Driver"),
+          BottomNavigationBarItem(icon: Icon(Icons.manage_accounts), label: "Menage Fleet"),
+        ],),
+        floatingActionButton: selectedPage != onwerPages.orders? null : FloatingActionButton(
           backgroundColor: AppColors.green,
           onPressed: () async {
             final listOfAvailableRiders =
@@ -123,10 +128,7 @@ return AppBar(
                     setState(() {
                       // selectedPage = onwerPages.fleetManagement;
                       Navigator.pop(context);
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const AddDriverPage()));
+                      selectedPage = onwerPages.fleetManagement;
                     });
                   },
                 ),
@@ -147,7 +149,7 @@ return AppBar(
               ),
               Container(
                 child: ListTile(
-                    title: Text("Sign Out"),
+                    title: Text("Sign Out", style: TextStyle(color: AppColors.red)),
                     onTap: () async {
                       final result = await _auth.signOut();
 
@@ -229,8 +231,9 @@ return AppBar(
             },
           );
         } else {
-          return const Center(
-            child: CircularProgressIndicator(),
+          return  Center(
+            child: LoadingAnimationWidget.staggeredDotsWave(
+                color: AppColors.darkergreen, size: 40)
           );
         }
       },
