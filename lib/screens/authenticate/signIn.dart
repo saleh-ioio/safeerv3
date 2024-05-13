@@ -149,6 +149,18 @@ class _SignInState extends State<SignIn> {
                                 },
                               ),
                             ),
+                            //error Text for form errors
+                           Container(
+                                  margin: EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 15),
+                                  child: Text(
+                                    '$error',
+                                    style: TextStyle(
+                                        color: AppColors.red,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 17),
+                                  )),
+
                             ElevatedButton(
                               style: ButtonStyle(
                                 backgroundColor: MaterialStateProperty.all<Color>(
@@ -158,6 +170,7 @@ class _SignInState extends State<SignIn> {
                                 if (_formKey.currentState!.validate()) {
                                   setState(() {
                                     isLoading = true;
+                                    error = '';
                                   });
                                   dynamic result =
                                       await _auth.signInWithEmailAndPassword(
@@ -166,7 +179,7 @@ class _SignInState extends State<SignIn> {
                                   if (result == null) {
                                     setState(() {
                                       error =
-                                          'Could not sign in with those credentials';
+                                          'either email or password is incorrect';
                                     });
                                   } else {
                                     print('signed in');
