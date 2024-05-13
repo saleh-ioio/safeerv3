@@ -54,8 +54,8 @@ class DataBaseService {
         .update({'status': status.name});
   }
 
-  Future updateOrderData(String clientName, String address, String phone,
-      String locationLink, String paymentMethod, double totalPrice, {Rider? rider}) async {
+  Future updateOrderData(String clientName, String? address, String phone,
+      String? locationLink, String? paymentMethod, double? totalPrice, {Rider? rider}) async {
     DocumentReference userDoc = userCollection.doc(uid);
 
     Map<String, dynamic> orderData = {
