@@ -236,7 +236,7 @@ class _OrderPageState extends State<OrderPage> {
                                     color: AppColors.darkergreen,
                                     width: 2.0), // Change this line
                               ),
-                              labelText: 'Location Link'),
+                              labelText: 'Google Maps share link'),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return null; // valid, because the field is allowed to be empty

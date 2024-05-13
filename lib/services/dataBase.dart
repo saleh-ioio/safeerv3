@@ -7,6 +7,45 @@ import 'package:safeer/models/user.dart';
 
 enum StatusEnum { pending, accepted, rejected }
 
+class DataBaseServiceWithNoUser{
+
+final CollectionReference userCollection =
+      FirebaseFirestore.instance.collection('owners-admins');
+
+  final CollectionReference riderCollection =
+      FirebaseFirestore.instance.collection('riders');
+
+
+Future<bool?> checkUserExist(UserTyp userType, String email) async {
+    if (userType == UserTyp.owner) {
+      final result =
+          await userCollection.where('email', isEqualTo: email).get();
+      if (result.docs.isNotEmpty) {
+        return true;
+      } else {
+        print('User does not exist');
+        return false;
+      }
+    }
+
+    if (userType == UserTyp.rider) {
+      final result =
+          await riderCollection.where('email', isEqualTo: email).get();
+      if (result.docs.isNotEmpty) {
+        return true;
+      } else {
+        print('User does not exist');
+        return false;
+      }
+    }
+
+    print('User Type is not valid');
+    return false;
+  }
+
+
+}
+
 class DataBaseService {
   final String uid;
   final String email;
@@ -53,6 +92,8 @@ class DataBaseService {
         .doc(refrenceInrider)
         .update({'status': status.name});
   }
+
+  
 
   Future updateOrderData(String clientName, String? address, String phone,
       String? locationLink, String? paymentMethod, double? totalPrice, {Rider? rider}) async {

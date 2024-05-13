@@ -2,11 +2,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:provider/provider.dart';
 import 'package:safeer/models/appColors.dart';
 
 import 'package:safeer/models/user.dart';
 import 'package:safeer/screens/authenticate/signIn.dart';
 import 'package:safeer/services/auth.dart';
+import 'package:safeer/services/dataBase.dart';
 
 class Register extends StatefulWidget {
   final UserTyp userType;
@@ -29,10 +31,11 @@ class _RegisterState extends State<Register> {
   String error = '';
   bool isLoading = false;
 
+  
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+        return Scaffold(
       backgroundColor: AppColors.primary,
       body: Stack(children: [
         Positioned(
@@ -81,7 +84,7 @@ class _RegisterState extends State<Register> {
           child: isLoading == false
               ? Container(
                   margin: EdgeInsets.symmetric(horizontal: 65),
-                child: Form(
+                  child: Form(
                     key: _formKey,
                     child: Center(
                       child: Column(
@@ -93,9 +96,11 @@ class _RegisterState extends State<Register> {
                             size: 60,
                             color: AppColors.darkergreen,
                           ),
-                
-                            Text(widget.userType.name, style: TextStyle(fontSize: 15 ,fontWeight: FontWeight.bold ,color:AppColors.darkgreen )),
-                          
+                          Text(widget.userType.name,
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.darkgreen)),
                           Container(
                             margin: EdgeInsets.symmetric(vertical: 10),
                             child: Text(
@@ -119,8 +124,15 @@ class _RegisterState extends State<Register> {
                                 ),
                                 labelText: 'Email',
                               ),
-                              validator: (val) =>
-                                  val!.isEmpty ? 'Enter an email' : null,
+                              validator: (val) {
+                                if (val == null || val.isEmpty) {
+                                  return 'Enter an email';
+                                } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+')
+                                    .hasMatch(val)) {
+                                  return 'Enter a valid email';
+                                }
+                                return null;
+                              },
                               onChanged: (val) {
                                 email = val;
                                 setState(() {});
@@ -140,8 +152,14 @@ class _RegisterState extends State<Register> {
                                 ),
                                 labelText: 'UserName',
                               ),
-                              validator: (val) =>
-                                  val!.isEmpty ? 'Enter a UserName' : null,
+                              validator: (val) {
+                                if (val == null || val.isEmpty) {
+                                  return 'Enter a username';
+                                } else if (val.length < 3) {
+                                  return 'Username must be at least 3 characters long';
+                                }
+                                return null;
+                              },
                               onChanged: (val) {
                                 username = val;
                                 setState(() {});
@@ -158,27 +176,61 @@ class _RegisterState extends State<Register> {
                                 ),
                                 labelText: 'Password',
                               ),
-                              validator: (val) => val!.length < 6
-                                  ? 'Enter a password 6+ chars long'
-                                  : null,
+                              // validator: (val) => val!.length < 6
+                              //     ? 'Enter a password 6+ chars long'
+                              //     : null,
+
                               obscureText: true,
+                              // onChanged: (val) {
+                              //   setState(() {});
+                              //   password = val;
+                              // },
+                              validator: (val) {
+                                if (val == null || val.isEmpty) {
+                                  return 'Enter a password';
+                                } else if (val.length < 6) {
+                                  return 'Password must be at least 6 characters long';
+                                }
+                                return null;
+                              },
                               onChanged: (val) {
-                                setState(() {});
                                 password = val;
+                                setState(() {});
                               },
                             ),
                           ),
+                           //error Text for form errors
+                           Container(
+                                  margin: EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 15),
+                                  child: Text(
+                                    '$error',
+                                    style: TextStyle(
+                                        color: AppColors.red,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 17),
+                                  )),
                           Container(
                             margin: EdgeInsets.only(bottom: 10),
                             child: ElevatedButton(
                               style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all<Color>(
-                                    AppColors.darkergreen),
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        AppColors.darkergreen),
                               ),
                               onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
                                   setState(() {
                                     isLoading = true;
+                                    error = '';
+                                  });
+                                 DataBaseServiceWithNoUser().checkUserExist(widget.userType, email).then((value) {
+                                    if (value == true) {
+                                      setState(() {
+                                        error = 'User already exists';
+                                        isLoading = false;
+                                      });
+                                    }
                                   });
                                   dynamic result =
                                       await _auth.registerWithEmailAndPassword(
@@ -203,8 +255,8 @@ class _RegisterState extends State<Register> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) =>
-                                              SignIn(usertype: widget.userType)),
+                                          builder: (context) => SignIn(
+                                              usertype: widget.userType)),
                                     );
                                   }
                                 }
@@ -221,6 +273,7 @@ class _RegisterState extends State<Register> {
                                   )),
                             ),
                           ),
+                         
                           Row(
                             children: [
                               Text("Already have an account?"),
@@ -248,7 +301,7 @@ class _RegisterState extends State<Register> {
                       ),
                     ),
                   ),
-              )
+                )
               : Center(
                   child: LoadingAnimationWidget.staggeredDotsWave(
                       color: AppColors.darkergreen, size: 40),
