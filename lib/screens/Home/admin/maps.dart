@@ -2,13 +2,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:kmeans/kmeans.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:ml_dataframe/ml_dataframe.dart';
 import 'package:provider/provider.dart';
 import 'package:safeer/models/appColors.dart';
 import 'package:safeer/models/order.dart';
 import 'package:safeer/models/user.dart';
 import 'package:safeer/services/dataBase.dart';
+import 'package:ml_algo/ml_algo.dart';
 
 class MapsPage extends StatefulWidget {
   const MapsPage({
@@ -24,6 +27,7 @@ class _MapsPageState extends State<MapsPage> {
   Widget build(BuildContext context) {
     final uid = context.watch<UserProvider>().uid;
     final email = context.watch<UserProvider>().email;
+    
 
     return Scaffold(
       appBar: AppBar(
@@ -46,7 +50,6 @@ class _MapsPageState extends State<MapsPage> {
           if (snapshot.hasError) {
             return const Text('Error');
           }
-          print("catting around the orders");
           List<ClientOrder> orders = snapshot.data as List<ClientOrder>;
           
        List<ClientOrder> ordersWithLocation =[];
@@ -58,8 +61,15 @@ class _MapsPageState extends State<MapsPage> {
           }}
           
           );
+          final ordersDouble = ordersWithLocation.map((e) => [double.parse(e.latitude!), double.parse(e.longitude!)]).toList();
+          ordersWithLocation.forEach((element) { 
 
-          print(ordersWithLocation.length);
+          });
+
+final dataToCluster = DataFrame(ordersDouble, header: ['latitude', 'longitude']);
+ordersDouble.forEach((element) { print(element); });
+final clustered = KMeans(ordersDouble,).fit(2);
+print(clustered);
           return FlutterMap(
               options: MapOptions(
                   initialCenter: LatLng(31.9491529, 35.9181175),
@@ -75,18 +85,23 @@ class _MapsPageState extends State<MapsPage> {
                         markers: [
                           for (var i = 0; i < ordersWithLocation.length; i++)
                             Marker(
-                              width: 45.0,
+                              width: 200,
 
                               height: 45.0,
                               point: LatLng(double.parse(ordersWithLocation[i].latitude!),
                                   double.parse(ordersWithLocation[i].longitude!)),
-                              child: IconButton(
-                                icon: Icon(Icons.location_on),
-                                color: AppColors.darkergreen,
-                                iconSize: 45.0,
-                                onPressed: () {
-                                  print('Marker tapped');
-                                },
+                              child: Row(
+                                children: [
+                                  IconButton( 
+                                    icon: Icon(Icons.location_on),
+                                    color: AppColors.darkergreen,
+                                    iconSize: 45.0,
+                                    onPressed: () {
+                                      print('Marker tapped');
+                                    },
+                                  ),
+                                  Text(ordersWithLocation[i].clientName),
+                                ],
                               ),
                             ),
                         ],
