@@ -27,7 +27,11 @@ class _MapsPageState extends State<MapsPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Maps'),
+        iconTheme: IconThemeData(color: Colors.white),
+        title: Text('Maps',style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+        ),),
       ),
       body: Center(
           child: FutureBuilder(
@@ -78,7 +82,7 @@ class _MapsPageState extends State<MapsPage> {
                                   double.parse(ordersWithLocation[i].longitude!)),
                               child: IconButton(
                                 icon: Icon(Icons.location_on),
-                                color: Colors.red,
+                                color: AppColors.darkergreen,
                                 iconSize: 45.0,
                                 onPressed: () {
                                   print('Marker tapped');
