@@ -132,6 +132,29 @@ class DataBaseService {
     // });
   }
 
+
+ List<ClientOrder> _OrdersListFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.docs.map((doc) {
+      return ClientOrder(
+        id: doc.id,
+        clientName: doc['clientName'] ?? '',
+        address: doc['address'] ?? '',
+        phone: doc['phone'] ?? '',
+        locationLink: doc['locationLink'] ?? '',
+        paymentMethod: doc['paymentMethod'] ?? '',
+        totalPrice: doc['totalPrice'] ?? 0.0,
+        latitude: doc['latitude'] ?? '',
+        longitude: doc['longitude'] ?? '',
+        riderId: doc['riderId'] ?? '',
+        riderEmail: doc['riderEmail'] ?? '',
+        
+        
+        
+      );
+    }).toList();
+  }
+
+
   Future sendInvetation(
       {required String riderId, required String riderEmail}) async {
     final refrence = await userCollection
@@ -178,20 +201,7 @@ class DataBaseService {
     return false;
   }
 
-  List<ClientOrder> _OrdersListFromSnapshot(QuerySnapshot snapshot) {
-    return snapshot.docs.map((doc) {
-      return ClientOrder(
-        id: doc.id,
-        clientName: doc['clientName'] ?? '',
-        address: doc['address'] ?? '',
-        phone: doc['phone'] ?? '',
-        locationLink: doc['locationLink'] ?? '',
-        paymentMethod: doc['paymentMethod'] ?? '',
-        totalPrice: doc['totalPrice'] ?? 0.0,
-        
-      );
-    }).toList();
-  }
+ 
 
   
 
@@ -250,6 +260,12 @@ class DataBaseService {
         .collection('orders')
         .snapshots()
         .map(_OrdersListFromSnapshot);
+  }
+
+  //the same as get orders but instead of sream a future
+  Future<List<ClientOrder>> getOrders() async {
+    final result = await userCollection.doc(uid).collection('orders').get();
+    return _OrdersListFromSnapshot(result);
   }
 
   Future<ClientOrder> getOrder({required String adminId, required String orderId}){
