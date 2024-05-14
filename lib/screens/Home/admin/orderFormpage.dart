@@ -281,8 +281,7 @@ class _OrderPageState extends State<OrderPage> {
                             isGoodLink = false;
                           });
                         },
-                      ) 
-                      ,
+                      ),
                       IconButton(
                         icon: Icon(Icons.paste),
                         onPressed: () async {
@@ -398,28 +397,33 @@ class _OrderPageState extends State<OrderPage> {
                       final extractedCoordinates =
                           extractCoordinates(originalUrl);
 
-                      Angle latAngle =
-                          Angle.degree(double.parse(extractedCoordinates[0]));
-                      Angle lonAngle =
-                          Angle.degree(double.parse(extractedCoordinates[1]));
-                          
-                          
-                          if(isGoodLink){
-                    final MapPin mapPin = MapPin(
-                        pin: LatLng(latAngle, lonAngle),
-                      );
+                      if (isGoodLink) {
+                        Angle latAngle =
+                            Angle.degree(double.parse(extractedCoordinates[0]));
+                        Angle lonAngle =
+                            Angle.degree(double.parse(extractedCoordinates[1]));
 
-                      print(' latitude is ${mapPin.pin.latitude.degrees}');
-                      print(' longitude is ${mapPin.pin.longitude.degrees}');
+                        final MapPin mapPin = MapPin(
+                          pin: LatLng(latAngle, lonAngle),
+                        );
 
-                       DataBaseService(uid: userId!, email: email!)
-                          .updateOrderData(_clientName, _address, _phone,
-                              _locationLink, _paymentMethod?.name, _totalPrice,
-                              rider: selectedRider, pin: mapPin);
+                        print(' latitude is ${mapPin.pin.latitude.degrees}');
+                        print(' longitude is ${mapPin.pin.longitude.degrees}');
 
-                      Navigator.pop(context);
-return;
-                          }
+                        DataBaseService(uid: userId!, email: email!)
+                            .updateOrderData(
+                                _clientName,
+                                _address,
+                                _phone,
+                                _locationLink,
+                                _paymentMethod?.name,
+                                _totalPrice,
+                                rider: selectedRider,
+                                pin: mapPin);
+
+                        Navigator.pop(context);
+                        return;
+                      }
                       // print('Original URL: $originalUrl');
                       // print(" the text between @@" +
                       //     extractTextAfterAt(_locationLinkController.text));
@@ -431,9 +435,15 @@ return;
                       // print("the unshortened link" + cat);
 
                       DataBaseService(uid: userId!, email: email!)
-                          .updateOrderData(_clientName, _address, _phone,
-                              _locationLink, _paymentMethod?.name, _totalPrice,
-                              rider: selectedRider, );
+                          .updateOrderData(
+                        _clientName,
+                        _address,
+                        _phone,
+                        _locationLink,
+                        _paymentMethod?.name,
+                        _totalPrice,
+                        rider: selectedRider,
+                      );
 
                       Navigator.pop(context);
                     }
