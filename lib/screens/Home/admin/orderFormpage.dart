@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
+import 'package:latlng/latlng.dart';
 
 import 'package:provider/provider.dart';
 import 'package:safeer/models/appColors.dart';
+import 'package:safeer/models/mapVar.dart';
 import 'package:safeer/models/rider.dart';
 import 'package:safeer/models/user.dart';
 import 'package:safeer/services/dataBase.dart';
@@ -21,24 +23,30 @@ class OrderPage extends StatefulWidget {
 
 enum PaymentMethod { Cash, Visa }
 
-// Future<String> unshortenUrl(String url) async {
-//   final response = await http.head(Uri.parse(url));
-//   return response.headers['location'] ?? url;
-// }
-bool isValidUrl(String url) {
-  final RegExp regex = RegExp(
-    r'^https?:\/\/([\w-]+(\.[\w-]+)+)([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?$'
-  );
-  return regex.hasMatch(url);
+String extractTextAfterAt(String input) {
+  // Find the index of the '@' character
+  int atIndex = input.indexOf('@');
+
+  // Check if '@' is present and not the last character
+  if (atIndex != -1 && atIndex < input.length - 1) {
+    // Extract and return the text after '@'
+    return input.substring(atIndex + 1);
+  } else {
+    // Return an empty string if '@' is not found or there's nothing after '@'
+    return '';
+  }
 }
 
-Future<String> unshortenUrl(String url) async {
-  if (!isValidUrl(url)) {
-    throw ArgumentError('Invalid URL: $url');
-    return url;
+List<String> extractCoordinates(String url) {
+  var uri = Uri.parse(url);
+  var atSplit = uri.path.split('@');
+  if (atSplit.length > 1) {
+    var commaSplit = atSplit[1].split(',');
+    if (commaSplit.length > 1) {
+      return [commaSplit[0], commaSplit[1]];
+    }
   }
-  final response = await http.head(Uri.parse(url));
-  return response.headers['location'] ?? url;
+  return [];
 }
 
 class _OrderPageState extends State<OrderPage> {
@@ -58,6 +66,8 @@ class _OrderPageState extends State<OrderPage> {
   String? riderId;
   String? dropDownValue = null;
   Rider? selectedRider;
+
+  bool isGoodLink = false;
 
   Widget TxtField(String label, Function(String) onChanged,
       String Function(String?) validator) {
@@ -237,35 +247,55 @@ class _OrderPageState extends State<OrderPage> {
                                     width: 2.0), // Change this line
                               ),
                               labelText: 'Google Maps share link'),
+                          onChanged: (value) {
+                            setState(() {
+                              _locationLinkController.text = value;
+                              isGoodLink = false;
+                              if (value
+                                  .startsWith('https://www.google.com/maps')) {
+                                isGoodLink = true;
+                              }
+                            });
+                          },
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return null; // valid, because the field is allowed to be empty
+                              return null; // valid if empty
+                            } else if (!value
+                                .startsWith('https://www.google.com/maps')) {
+                              return 'Please enter a valid Google Maps link or leave it empty';
                             }
-
-                            final regex = RegExp(
-                                r'^(https:\/\/www\.google\.com\/maps\/place\/.*|https:\/\/maps\.app\.goo\.gl\/.*)$');
-
-                            if (!regex.hasMatch(value)) {
-                              return 'Please enter a valid Google Maps URL or shared URL';
-                            }
-
-                            return null; // valid URL
-                          },
-                          onChanged: (value) {
-                            if (value.isEmpty) {
-                              return;
-                            }
-                            setState(() {
-                              _locationLink = value;
-                            });
+                            return null; // valid if it's a Google Maps link
                           },
                         ),
                       ),
+                      Icon(
+                        Icons.map_outlined,
+                        color: isGoodLink ? Colors.green : Colors.red,
+                      ),
+                      // icon button to clear the textfield
+                      IconButton(
+                        icon: Icon(Icons.clear),
+                        onPressed: () {
+                          _locationLinkController.clear();
+                          setState(() {
+                            isGoodLink = false;
+                          });
+                        },
+                      ) 
+                      ,
                       IconButton(
                         icon: Icon(Icons.paste),
                         onPressed: () async {
                           final clipboardData = await FlutterClipboard.paste();
                           _locationLinkController.text = clipboardData;
+
+                          setState(() {
+                            isGoodLink = false;
+                            if (_locationLinkController.text
+                                .startsWith('https://www.google.com/maps')) {
+                              isGoodLink = true;
+                            }
+                          });
                         },
                       )
                     ],
@@ -343,8 +373,7 @@ class _OrderPageState extends State<OrderPage> {
                                 _totalPrice = double.tryParse(value) ?? 0.0;
                               });
                             },
-                          )
-                                                   ),
+                          )),
                     )
                   ],
                 ),
@@ -353,24 +382,58 @@ class _OrderPageState extends State<OrderPage> {
                     backgroundColor:
                         MaterialStateProperty.all<Color>(AppColors.darkergreen),
                   ),
-                  onPressed: () async{
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       // Process data.
-                      // print('Client Name: $_clientName\n'
-                      //     'Address: $_address\n'
-                      //     'Phone: $_phone\n'
-                      //     'Location Link: $_locationLink\n'
-                      //     'Payment Method: $_paymentMethod\n'
-                      //     'Total Price: $_totalPrice\n');
+                      print('Client Name: $_clientName\n'
+                          'Address: $_address\n'
+                          'Phone: $_phone\n'
+                          'Location Link: $_locationLink\n'
+                          'location link: ${_locationLinkController.text}\n'
+                          'Payment Method: $_paymentMethod\n'
+                          'Total Price: $_totalPrice\n');
 
-                      final originalUrl = await unshortenUrl(_locationLink);
-                      
-                      print('Original URL: $originalUrl');
+                      final originalUrl = _locationLinkController.text;
+
+                      final extractedCoordinates =
+                          extractCoordinates(originalUrl);
+
+                      Angle latAngle =
+                          Angle.degree(double.parse(extractedCoordinates[0]));
+                      Angle lonAngle =
+                          Angle.degree(double.parse(extractedCoordinates[1]));
+                          
+                          
+                          if(isGoodLink){
+                    final MapPin mapPin = MapPin(
+                        pin: LatLng(latAngle, lonAngle),
+                      );
+
+                      print(' latitude is ${mapPin.pin.latitude.degrees}');
+                      print(' longitude is ${mapPin.pin.longitude.degrees}');
+
+                       DataBaseService(uid: userId!, email: email!)
+                          .updateOrderData(_clientName, _address, _phone,
+                              _locationLink, _paymentMethod?.name, _totalPrice,
+                              rider: selectedRider, pin: mapPin);
+
+                      Navigator.pop(context);
+return;
+                          }
+                      // print('Original URL: $originalUrl');
+                      // print(" the text between @@" +
+                      //     extractTextAfterAt(_locationLinkController.text));
+                      // print("the text as a whole" + _locationLinkController.text);
+
+                      //  final resulting = extractValues(_locationLinkController.text);
+
+                      // final cat =  extractLatLng(_locationLinkController.text);
+                      // print("the unshortened link" + cat);
 
                       DataBaseService(uid: userId!, email: email!)
                           .updateOrderData(_clientName, _address, _phone,
                               _locationLink, _paymentMethod?.name, _totalPrice,
-                              rider: selectedRider);
+                              rider: selectedRider, );
 
                       Navigator.pop(context);
                     }

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
 import 'package:safeer/models/invetation.dart';
+import 'package:safeer/models/mapVar.dart';
 import 'package:safeer/models/order.dart';
 import 'package:safeer/models/rider.dart';
 import 'package:safeer/models/user.dart';
@@ -96,7 +97,7 @@ class DataBaseService {
   
 
   Future updateOrderData(String clientName, String? address, String phone,
-      String? locationLink, String? paymentMethod, double? totalPrice, {Rider? rider}) async {
+      String? locationLink, String? paymentMethod, double? totalPrice, {Rider? rider, MapPin? pin}) async {
     DocumentReference userDoc = userCollection.doc(uid);
 
     Map<String, dynamic> orderData = {
@@ -108,6 +109,9 @@ class DataBaseService {
       'totalPrice': totalPrice,
       'riderId' : rider?.uid, 
       'riderEmail' : rider?.email,
+      'longitude' : pin?.pin.longitude.degrees.toString(),
+      'latitude' : pin?.pin.latitude.degrees.toString(),
+      
     };
 
     final orderIdInAdmin = await userDoc.collection('orders').add(orderData);
