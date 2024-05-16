@@ -11,6 +11,7 @@ class ClientOrder {
   final String? riderEmail;
   final String? longitude;
   final String? latitude;
+   int? cluster;
   
   ClientOrder({
     required this.id,
@@ -24,6 +25,7 @@ class ClientOrder {
     this.riderEmail,
     this.longitude,
     this.latitude,
+    this.cluster,
   });
 
 
