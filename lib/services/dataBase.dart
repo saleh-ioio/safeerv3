@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/widgets.dart';
 import 'package:safeer/models/invetation.dart';
 import 'package:safeer/models/mapVar.dart';
 import 'package:safeer/models/order.dart';
@@ -125,7 +124,8 @@ class DataBaseService {
       'AdminEmail': email,
       };
 
-    final orderIdInrider = await riderCollection.doc(rider.uid).collection('orders').add(orderDataRef);
+    // final orderIdInrider = 
+    await riderCollection.doc(rider.uid).collection('orders').add(orderDataRef);
     }
     // return await userDoc.update({
     //   'orders': FieldValue.arrayUnion([orderData])

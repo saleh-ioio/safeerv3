@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:provider/provider.dart';
 import 'package:safeer/models/appColors.dart';
 
 import 'package:safeer/models/user.dart';

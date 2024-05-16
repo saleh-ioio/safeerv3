@@ -1,12 +1,10 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:kmeans/kmeans.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:ml_dataframe/ml_dataframe.dart';
 import 'package:provider/provider.dart';
 import 'package:safeer/models/appColors.dart';
 import 'package:safeer/models/order.dart';
@@ -36,7 +34,7 @@ class _MapsPageState extends State<MapsPage> {
     List<ClientOrder> orders = [];
     List<Marker> MarkerList = [];
     // List<ClientOrder> clusteredOrders = [];
-    bool filtered = false;
+    // bool filtered = false;
 
     Widget DrawerMap() {
       return Drawer(
@@ -109,7 +107,7 @@ class _MapsPageState extends State<MapsPage> {
                               ])
                           .toList();
 
-                      final clusters =
+                     // final clusters =
                           KMeans(ordersDouble).fit(numberOfClusters).clusters;
 
                       // for (var i = 0; i < clusters.length; i++) {

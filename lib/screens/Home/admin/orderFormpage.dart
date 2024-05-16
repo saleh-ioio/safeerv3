@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:http/http.dart' as http;
 import 'package:latlng/latlng.dart';
 
 import 'package:provider/provider.dart';
@@ -184,7 +183,7 @@ class _OrderPageState extends State<OrderPage> {
                     ),
                     validator: (value) {
                       //checks if is null or empty
-                      if (value!.isEmpty || value == null) {
+                      if (value!.isEmpty ) {
                         return null;
                       }
                       return null;
