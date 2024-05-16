@@ -39,7 +39,7 @@ class _HomeRiderPageState extends State<HomeRiderPage> {
             color:
                 selectedPage == DriverPages.Profile ? AppColors.primary : null,
             child: ListTile(
-              title: Text("Profile"),
+              title: Text("Profile",style: TextStyle( color: selectedPage == DriverPages.Profile ? AppColors.darkgreen :AppColors.black )),
               onTap: () {
                 setState(() {
                   selectedPage = DriverPages.Profile;
@@ -53,7 +53,7 @@ class _HomeRiderPageState extends State<HomeRiderPage> {
                 ? AppColors.primary
                 : null,
             child: ListTile(
-              title: Text("Current Orders"),
+              title: Text("Current Orders",style: TextStyle( color: selectedPage == DriverPages.currentOrders ? AppColors.darkgreen :AppColors.black )),
               onTap: () {
                 setState(() {
                   // selectedPage = onwerPages.fleetManagement;
@@ -68,7 +68,7 @@ class _HomeRiderPageState extends State<HomeRiderPage> {
                 ? AppColors.primary
                 : null,
             child: ListTile(
-              title: Text("Completed Orders"),
+              title: Text("Completed Orders",style: TextStyle( color: selectedPage == DriverPages.CompletedOrders ? AppColors.darkgreen :AppColors.black )),
               onTap: () {
                 setState(() {
                   Navigator.pop(context);
@@ -82,7 +82,7 @@ class _HomeRiderPageState extends State<HomeRiderPage> {
                 ? AppColors.primary
                 : null,
             child: ListTile(
-              title: Text("Menage Owners"),
+              title: Text("Menage Owners" ,style: TextStyle( color: selectedPage == DriverPages.MenageOwner ? AppColors.darkgreen :AppColors.black ) ,),
               onTap: () {
                 setState(() {
                   Navigator.pop(context);
@@ -94,7 +94,7 @@ class _HomeRiderPageState extends State<HomeRiderPage> {
           Container(
             color: selectedPage == DriverPages.stats ? AppColors.primary : null,
             child: ListTile(
-              title: Text("Stats"),
+              title: Text("Stats", style: TextStyle( color: selectedPage == DriverPages.stats ? AppColors.darkgreen :AppColors.black ) ),
               onTap: () {
                 setState(() {
                   Navigator.pop(context);
