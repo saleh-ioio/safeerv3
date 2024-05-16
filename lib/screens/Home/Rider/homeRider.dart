@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:safeer/models/appColors.dart';
 import 'package:safeer/models/invetation.dart';
 import 'package:safeer/models/user.dart';
+import 'package:safeer/screens/Home/Rider/menageOwners.dart';
 import 'package:safeer/screens/Home/Rider/ordersWidget.dart';
 import 'package:safeer/services/auth.dart';
 import 'package:safeer/services/dataBase.dart';
@@ -15,10 +16,10 @@ class HomeRiderPage extends StatefulWidget {
 }
 
 enum DriverPages { Profile, currentOrders, CompletedOrders, MenageOwner, stats }
-class _HomeRiderPageState extends State<HomeRiderPage> {
 
+class _HomeRiderPageState extends State<HomeRiderPage> {
   DriverPages selectedPage = DriverPages.Profile;
-Widget DrawerBuild(String? email) {
+  Widget DrawerBuild(String? email) {
     return Drawer(
       child: Column(
         children: [
@@ -35,7 +36,8 @@ Widget DrawerBuild(String? email) {
             accountEmail: Text(email!),
           ),
           Container(
-            color: selectedPage == DriverPages.Profile ? AppColors.primary : null,
+            color:
+                selectedPage == DriverPages.Profile ? AppColors.primary : null,
             child: ListTile(
               title: Text("Profile"),
               onTap: () {
@@ -62,8 +64,9 @@ Widget DrawerBuild(String? email) {
             ),
           ),
           Container(
-            color:
-                selectedPage == DriverPages.CompletedOrders ? AppColors.primary : null,
+            color: selectedPage == DriverPages.CompletedOrders
+                ? AppColors.primary
+                : null,
             child: ListTile(
               title: Text("Completed Orders"),
               onTap: () {
@@ -74,9 +77,10 @@ Widget DrawerBuild(String? email) {
               },
             ),
           ),
-           Container(
-            color:
-                selectedPage == DriverPages.MenageOwner ? AppColors.primary : null,
+          Container(
+            color: selectedPage == DriverPages.MenageOwner
+                ? AppColors.primary
+                : null,
             child: ListTile(
               title: Text("Menage Owners"),
               onTap: () {
@@ -87,9 +91,8 @@ Widget DrawerBuild(String? email) {
               },
             ),
           ),
-           Container(
-            color:
-                selectedPage == DriverPages.stats ? AppColors.primary : null,
+          Container(
+            color: selectedPage == DriverPages.stats ? AppColors.primary : null,
             child: ListTile(
               title: Text("Stats"),
               onTap: () {
@@ -99,9 +102,7 @@ Widget DrawerBuild(String? email) {
                 });
               },
             ),
-          )
-
-,
+          ),
           Container(
             child: ListTile(
                 title: Text("Sign Out", style: TextStyle(color: AppColors.red)),
@@ -123,28 +124,46 @@ Widget DrawerBuild(String? email) {
       ),
     );
   }
+
   final AuthService _auth = AuthService();
   @override
   Widget build(BuildContext context) {
     final user = context.watch<UserProvider>();
     return Scaffold(
       backgroundColor: AppColors.primary,
-        drawer: DrawerBuild(user.email),
-        appBar: AppBar(
-          iconTheme: IconThemeData(color: AppColors.white),
-          title: Text(selectedPage.name, style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),),
-          actions: [
-            IconButton(onPressed: (){}, icon: Icon(Icons.notifications)),
-            IconButton(onPressed: (){}, icon: Icon(Icons.share)),
-            IconButton(onPressed: (){}, icon: Icon(Icons.search)),
-
-          ],
+      drawer: DrawerBuild(user.email),
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: AppColors.white),
+        title: Text(
+          selectedPage.name,
+          style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
         ),
-        body: Column(
-          children: [
-            
-           ordersList()
-          ],
-        ));
+        actions: [
+          IconButton(onPressed: () {}, icon: Icon(Icons.notifications)),
+          IconButton(onPressed: () {}, icon: Icon(Icons.share)),
+          IconButton(onPressed: () {}, icon: Icon(Icons.search)),
+        ],
+      ),
+      body: Column(
+        children: [
+          selectedPage == DriverPages.Profile
+              ? Container()
+              : selectedPage == DriverPages.currentOrders
+                  ? ordersList()
+                  : selectedPage == DriverPages.CompletedOrders
+                      ? Container()
+                      : selectedPage == DriverPages.MenageOwner
+                          ? MenageOwner()
+                          : selectedPage == DriverPages.stats
+                              ? Container()
+                              : ordersList()
+        ],
+      ),
+      bottomNavigationBar: selectedPage == DriverPages.MenageOwner ? BottomNavigationBar(items: 
+      [
+        BottomNavigationBarItem(icon: Icon(Icons.group_add), label: "Add Owners"),
+        BottomNavigationBarItem(icon: Icon(Icons.manage_accounts), label: "Menage Owners"),
+      ],) : null,
+    );
   }
 }

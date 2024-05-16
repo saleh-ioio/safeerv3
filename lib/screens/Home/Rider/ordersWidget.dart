@@ -37,7 +37,7 @@ final orders = snapshot.data as List<dynamic>;
   return ListView.builder(
     shrinkWrap: true,
     itemCount: orders.length, itemBuilder: (context, index) {
-   return FutureBuilder(future: DataBaseService(email: email!, uid: uid!).getOrder(adminId:  orders[index]['adminId'],orderId:  orders[index]['orderId']), builder: 
+   return FutureBuilder(future: DataBaseService(email: email, uid: uid).getOrder(adminId:  orders[index]['adminId'],orderId:  orders[index]['orderId']), builder: 
    (context, result){
     print(result.data);
     if(result.hasData){
