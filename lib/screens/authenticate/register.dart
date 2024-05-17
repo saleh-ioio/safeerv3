@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:provider/provider.dart';
 import 'package:safeer/models/appColors.dart';
 
 import 'package:safeer/models/user.dart';
@@ -30,11 +31,10 @@ class _RegisterState extends State<Register> {
   String error = '';
   bool isLoading = false;
 
-  
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-        return Scaffold(
+    return Scaffold(
       backgroundColor: AppColors.primary,
       body: Stack(children: [
         Positioned(
@@ -198,17 +198,17 @@ class _RegisterState extends State<Register> {
                               },
                             ),
                           ),
-                           //error Text for form errors
-                           Container(
-                                  margin: EdgeInsets.symmetric(
-                                      vertical: 10, horizontal: 15),
-                                  child: Text(
-                                    '$error',
-                                    style: TextStyle(
-                                        color: AppColors.red,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 17),
-                                  )),
+                          //error Text for form errors
+                          Container(
+                              margin: EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 15),
+                              child: Text(
+                                '$error',
+                                style: TextStyle(
+                                    color: AppColors.red,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 17),
+                              )),
                           Container(
                             margin: EdgeInsets.only(bottom: 10),
                             child: ElevatedButton(
@@ -223,7 +223,9 @@ class _RegisterState extends State<Register> {
                                     isLoading = true;
                                     error = '';
                                   });
-                                 DataBaseServiceWithNoUser().checkUserExist(widget.userType, email).then((value) {
+                                  DataBaseServiceWithNoUser()
+                                      .checkUserExist(widget.userType, email)
+                                      .then((value) {
                                     if (value == true) {
                                       setState(() {
                                         error = 'User already exists';
@@ -248,15 +250,19 @@ class _RegisterState extends State<Register> {
                                       });
                                     }
                                   } else {
-                                    print('signed in');
-                                    print(result.uid);
+                                    setState(() {
+                                      
+                                    context.read<UserProvider>().updateUid(result.uid, widget.userType, email: email);
                                     Navigator.pop(context);
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => SignIn(
-                                              usertype: widget.userType)),
-                                    );
+                                    });
+                                    // Navigator.pop(context);
+                                    
+                                    // Navigator.push(
+                                    //   context,
+                                    //   MaterialPageRoute(
+                                    //       builder: (context) => SignIn(
+                                    //           usertype: widget.userType, toast: "Accout Registered succesfully",)),
+                                    // );
                                   }
                                 }
                               },
@@ -272,7 +278,7 @@ class _RegisterState extends State<Register> {
                                   )),
                             ),
                           ),
-                         
+
                           Row(
                             children: [
                               Text("Already have an account?"),

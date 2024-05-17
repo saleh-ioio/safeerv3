@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:safeer/models/appColors.dart';
 import 'package:safeer/models/order.dart';
 import 'package:safeer/models/user.dart';
+import 'package:safeer/screens/Home/admin/orderDetailsPage.dart';
 import 'package:safeer/services/dataBase.dart';
 
 class ordersList extends StatefulWidget {
@@ -37,6 +38,7 @@ class _ordersListState extends State<ordersList> {
           return ListView.builder(
             shrinkWrap: true,
             itemCount: orders.length,
+            
             itemBuilder: (context, index) {
               return FutureBuilder(
                   future: DataBaseService(email: email, uid: uid).getOrder(
@@ -48,11 +50,19 @@ class _ordersListState extends State<ordersList> {
                       final order = result.data as ClientOrder;
                       return Container(
                         margin: EdgeInsets.only(top: 7, left: 2, right: 2),
+                        decoration: BoxDecoration(
+                          color: AppColors.offWhite,
+                          border:
+                              Border.all(color: AppColors.lightGreen, width: 2),
+                        ),
                         child: Ink(
                           color: AppColors.offWhite,
                           child: InkWell(
                             splashColor: AppColors.lightGreen,
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(context, 
+                              MaterialPageRoute(builder: (context) => orderDetails()));
+                            },
                             child: ListTile(
                               title: Text(order.clientName),
                               subtitle: Text(order.address),

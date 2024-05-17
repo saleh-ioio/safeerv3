@@ -9,6 +9,7 @@ import 'package:safeer/models/order.dart';
 import 'package:safeer/models/user.dart';
 import 'package:safeer/screens/Home/admin/DriverManage.dart';
 import 'package:safeer/screens/Home/admin/maps.dart';
+import 'package:safeer/screens/Home/admin/orderDetailsPage.dart';
 import 'package:safeer/screens/Home/admin/orderFormpage.dart';
 import 'package:safeer/services/auth.dart';
 import 'package:safeer/services/dataBase.dart';
@@ -254,10 +255,18 @@ class _HomeAdminState extends State<HomeAdmin> {
               return Container(
                   margin: EdgeInsets.only(top: 7, left: 2, right: 2),
                   // color: AppColors.offWhite,
+                  decoration: BoxDecoration(
+                    color: AppColors.offWhite,
+                    border: Border.all(color: AppColors.lightGreen, width: 2),
+                  ),
                   child: Ink(
                     color: AppColors.offWhite,
                     child: InkWell(
-                      onTap: () {},
+                      onTap: () {
+ Navigator.push(context, 
+                              MaterialPageRoute(builder: (context) => orderDetails()));
+
+                      },
                       splashColor: AppColors.lightGreen,
                       child: Container(
                         child: ListTile(

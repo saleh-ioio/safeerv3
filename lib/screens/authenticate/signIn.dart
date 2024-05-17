@@ -10,11 +10,15 @@ import 'package:safeer/services/auth.dart';
 
 class SignIn extends StatefulWidget {
   final UserTyp usertype;
+  final String? toast ;
 
   const SignIn({
     Key? key,
+    this.toast = null,
+
     required this.usertype,
-  }) : super(key: key);
+    
+  }) : super(key: key , );
 
   @override
   State<SignIn> createState() => _SignInState();
@@ -27,15 +31,17 @@ class _SignInState extends State<SignIn> {
   String email = '';
   String password = '';
   String error = '';
+  
 
   bool isLoading = false;
 
   final _formKey = GlobalKey<FormState>();
-
+    
   // 0 for owner and 1 for rider
 
   @override
   Widget build(BuildContext context) {
+
     print(widget.usertype.name);
     return Scaffold(
       backgroundColor: AppColors.primary,
