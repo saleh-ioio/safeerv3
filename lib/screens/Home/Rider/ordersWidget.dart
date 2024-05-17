@@ -60,8 +60,10 @@ class _ordersListState extends State<ordersList> {
                           child: InkWell(
                             splashColor: AppColors.lightGreen,
                             onTap: () {
+                              
                               Navigator.push(context, 
-                              MaterialPageRoute(builder: (context) => orderDetails()));
+                              MaterialPageRoute(builder: (context) => orderDetails(  orderId: orders[index]['orderId'] , 
+                              adminUid: orders[index]['adminId'] )));
                             },
                             child: ListTile(
                               title: Text(order.clientName),

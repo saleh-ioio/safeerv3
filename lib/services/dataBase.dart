@@ -42,7 +42,18 @@ Future<bool?> checkUserExist(UserTyp userType, String email) async {
     print('User Type is not valid');
     return false;
   }
-
+  
+Future<ClientOrder> getOrder({required String adminId, required String orderId}){
+    return userCollection.doc(adminId).collection('orders').doc(orderId).get().then((value) => ClientOrder(
+      id: value.id,
+      clientName: value['clientName'] ?? '',
+      address: value['address'] ?? '',
+      phone: value['phone'] ?? '',
+      locationLink: value['locationLink'] ?? '',
+      paymentMethod: value['paymentMethod'] ?? '',
+      totalPrice: value['totalPrice'] ?? 0.0,
+    ));
+  }
 
 }
 

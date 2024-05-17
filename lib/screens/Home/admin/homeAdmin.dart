@@ -47,8 +47,9 @@ class _HomeAdminState extends State<HomeAdmin> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        OrderPage(listOfAvailableRiders: listOfAvailableRiders,),
+                    builder: (context) => OrderPage(
+                      listOfAvailableRiders: listOfAvailableRiders,
+                    ),
                   ),
                 );
               },
@@ -263,9 +264,11 @@ class _HomeAdminState extends State<HomeAdmin> {
                     color: AppColors.offWhite,
                     child: InkWell(
                       onTap: () {
- Navigator.push(context, 
-                              MaterialPageRoute(builder: (context) => orderDetails()));
-
+                        final order = orders[index];
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => orderDetails(orderId: order.id,adminUid: uid, )));
                       },
                       splashColor: AppColors.lightGreen,
                       child: Container(
