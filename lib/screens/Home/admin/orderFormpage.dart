@@ -414,7 +414,7 @@ class _OrderPageState extends State<OrderPage> {
                                 _clientName,
                                 _address,
                                 _phone,
-                                _locationLink,
+                                _locationLinkController.text,
                                 _paymentMethod?.name,
                                 _totalPrice,
                                 rider: selectedRider,

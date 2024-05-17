@@ -42,7 +42,7 @@ Future<bool?> checkUserExist(UserTyp userType, String email) async {
     print('User Type is not valid');
     return false;
   }
-  
+
 Future<ClientOrder> getOrder({required String adminId, required String orderId}){
     return userCollection.doc(adminId).collection('orders').doc(orderId).get().then((value) => ClientOrder(
       id: value.id,
@@ -241,9 +241,9 @@ class DataBaseService {
 
   
 
-  List<Invitationclient> _InvetationsListFromSnapshot(QuerySnapshot snapshot) {
+  List<InvitationOwner> _InvetationsListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
-      return Invitationclient(
+      return InvitationOwner(
         onwerId: doc['ownerId'] ?? '',
         Status: doc['status'] ?? '',
         owenerEmail: doc['ownerEmail'] ?? '',
@@ -254,7 +254,7 @@ class DataBaseService {
     }).toList();
   }
 
-  Stream<List<Invitationclient>> get invetations {
+  Stream<List<InvitationOwner>> get invetations {
     print('get invetations called');
     final result = riderCollection
         .doc(uid)
@@ -303,6 +303,16 @@ class DataBaseService {
   Stream<List<dynamic>> ordersOnRider(){
     return riderCollection.doc(uid).collection('orders').snapshots().map((event) => event.docs.map((e) => e.data()).toList());
   }
-  
+
+  //list of Pending Riders invetations 
+  Stream<List<InvitationOwner>> get pendingInvetations {
+    final result = riderCollection
+        .doc(uid)
+        .collection('fleetTable')
+        .where('status', isEqualTo: StatusEnum.pending.name)
+        .snapshots()
+        .map(_InvetationsListFromSnapshot);
+    return result;
+  }
 }
 

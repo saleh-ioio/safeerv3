@@ -18,7 +18,7 @@ class AppColors {
   static const lightyellow = Color(0xFFEEE8A9);
   static const yellow = Color(0xFFE1D766);
 
-  static const white = Color(0xFFFFFFFF);
+  static const white = Color.fromARGB(255, 245, 245, 245);
   static const black = Color(0xFF000000);
 
 

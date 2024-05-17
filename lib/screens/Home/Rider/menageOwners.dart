@@ -18,7 +18,7 @@ class _MenageOwnerState extends State<MenageOwner> {
   Widget build(BuildContext context) {
     final user = context.watch<UserProvider>();
     return Column(children: [
-      StreamBuilder<List<Invitationclient>>(
+      StreamBuilder<List<InvitationOwner>>(
         stream: DataBaseService(
                 uid: context.watch<UserProvider>().uid!,
                 email: context.watch<UserProvider>().email!)
@@ -27,8 +27,8 @@ class _MenageOwnerState extends State<MenageOwner> {
           print(snapshot.hasData);
           if (snapshot.hasError) print(snapshot.error);
           if (snapshot.hasData) {
-            List<Invitationclient> invetations =
-                snapshot.data as List<Invitationclient>;
+            List<InvitationOwner> invetations =
+                snapshot.data as List<InvitationOwner>;
             if (invetations.length == 0) {
               return const Center(child: Text("No invetations"));
             } else {

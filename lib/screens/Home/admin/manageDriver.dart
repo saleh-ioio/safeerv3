@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:safeer/models/appColors.dart';
 import 'package:safeer/models/user.dart';
@@ -17,8 +18,36 @@ class _AddDriverPageState extends State<AddDriverPage> {
   List<Map<String, String>> suggestedRider =
       List<Map<String, String>>.empty(growable: true);
   String email = "";
+
+  
+
   @override
   Widget build(BuildContext context) {
+ final   emailProv = context.read<UserProvider>().email!;
+ final  uidProv = context.read<UserProvider>().uid!;
+Widget pendingInvetations(){
+
+    return StreamBuilder(stream: DataBaseService(email: emailProv,uid: uidProv   ).pendingInvetations, builder:(context, snapshot) {
+      if(snapshot.connectionState == ConnectionState.waiting){
+        return LoadingAnimationWidget.fallingDot(color: AppColors.darkergreen, size: 20);
+      }
+      
+      if(snapshot.hasError){
+        return Text("error", style: TextStyle(color: AppColors.red),);
+      }
+      final pendingInvetations = snapshot.data  ;
+      print(pendingInvetations);
+      return Column(
+        children: [
+          Container(alignment: Alignment.centerLeft,
+            child: Text('Pending Invitations : ',textAlign: TextAlign.left, style: TextStyle(fontWeight: FontWeight.bold ,color:AppColors.darkergreen
+             ),),
+          ),
+                
+        ],
+          );
+    }, );
+  }
     return 
        Container(
           padding: EdgeInsets.symmetric(horizontal: 15, vertical: 25),
@@ -109,9 +138,16 @@ class _AddDriverPageState extends State<AddDriverPage> {
                          AppColors.darkergreen),
               ),
             ),
+            Container(
+              margin: EdgeInsets.symmetric(vertical: 10),
+              child: pendingInvetations())
           ],
                ),
        );
 
+       
+
   }
+
+  
 }

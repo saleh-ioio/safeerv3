@@ -1,5 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import 'package:safeer/models/appColors.dart';
@@ -21,38 +23,114 @@ class orderDetails extends StatefulWidget {
 class _orderDetailsState extends State<orderDetails> {
   @override
   Widget build(BuildContext context) {
+    Widget detailWidget(
+        {required String textType,
+        required String text,
+        required IconData icon,
+        double fontsizeText = 18,
+        bool moveDown = false
+        }) {
+      return Container(
+          margin: const EdgeInsets.all(3),
+          padding: const EdgeInsets.all(10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                  margin: EdgeInsets.symmetric(horizontal: 10),
+                  child: Icon(icon, color: AppColors.darkergreen, size: 30)),
+
+              Text(textType,
+                  style: const TextStyle(
+                      color: AppColors.darkergreen, fontSize: 18)),
+
+              
+                Expanded(
+                  child: Text(text,
+                      style:  TextStyle(color: AppColors.black, fontSize: fontsizeText )
+                      ,overflow: TextOverflow.ellipsis,),
+                ),
+                    
+              
+              SizedBox(width: 15)
+            ],
+          ));
+    }
+
+    Widget CustDivider() {
+      return Container(
+          margin: const EdgeInsets.symmetric(horizontal: 30), child: Divider());
+    }
+
     return Scaffold(
-      backgroundColor: AppColors.primary,
-      appBar: AppBar(
-        iconTheme: const IconThemeData(color: Colors.white),
-        title: const Text(
-          'Order Details : ',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        backgroundColor: AppColors.primary,
+        appBar: AppBar(
+          iconTheme: const IconThemeData(color: Colors.white),
+          title: const Text(
+            'Order Details : ',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
         ),
-      ),
-      body: Center(
-        child: FutureBuilder(
-          future: DataBaseServiceWithNoUser().getOrder(
-              adminId: widget.adminUid, orderId: widget.orderId),
+        body: Center(
+            child: FutureBuilder(
+          future: DataBaseServiceWithNoUser()
+              .getOrder(adminId: widget.adminUid, orderId: widget.orderId),
           builder: (context, snapshot) {
-            if(snapshot.connectionState == ConnectionState.waiting){
-              return LoadingAnimationWidget.dotsTriangle(color: AppColors.darkergreen, size: 20);
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return LoadingAnimationWidget.dotsTriangle(
+                  color: AppColors.darkergreen, size: 50);
             }
             if (snapshot.hasError) {
-              return const Text("error", style: TextStyle(color: AppColors.red),);
-            }
-            return Column(
-            children: [
-              Text('Client Name: ${snapshot.data!.clientName}'),
-              Text('Address: ${snapshot.data!.address}'),
-              Text('Phone: ${snapshot.data!.phone}'),
-              Text('Location Link: ${snapshot.data!.locationLink}'),
-              Text('Payment Method: ${snapshot.data!.paymentMethod}'),
-              Text('Total Price: ${snapshot.data!.totalPrice}'),
-          
-            ],
+              return const Text(
+                "error",
+                style: TextStyle(color: AppColors.red),
               );
-          }, 
+            }
+            return Container(
+              margin: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+              padding: EdgeInsets.symmetric(horizontal: 3, vertical: 10),
+              decoration: BoxDecoration(
+                color: AppColors.white,
+                border: Border.all(color: AppColors.darkergreen),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Column(
+                children: [
+                  detailWidget(
+                      icon: Icons.account_box_outlined,
+                      textType: "Client Name: ",
+                      text: snapshot.data!.clientName),
+                  CustDivider(),
+                  detailWidget(
+                      icon: Icons.location_on_outlined,
+                      textType: "Client Address: ",
+                      text: snapshot.data!.address),
+                  CustDivider(),
+                  detailWidget(
+                      icon: Icons.map_sharp,
+                      textType: "LocationLink: ",
+                      text: snapshot.data!.locationLink
+                      ),
+                  CustDivider(),
+                  detailWidget(
+                      icon: Icons.phone_android_outlined,
+                      textType: "Client Phone: ",
+                      text: snapshot.data!.phone),
+                  CustDivider(),
+                  detailWidget(
+                      icon: Icons.payment_outlined,
+                      textType: "Payment Method:",
+                      text: snapshot.data!.paymentMethod),
+                  CustDivider(),
+                  detailWidget(
+                      icon: Icons.phone_android_outlined,
+                      textType: "Total Price:",
+                      text: snapshot.data!.totalPrice.toString()),
+                  CustDivider(),
+                ],
+              ),
+            );
+          },
         )));
   }
 }

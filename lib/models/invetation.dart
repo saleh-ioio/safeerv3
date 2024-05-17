@@ -1,4 +1,4 @@
-class Invitationclient {
+class InvitationOwner {
   String onwerId;
   String? owenerEmail;
   String refrerenceInOwner;
@@ -6,7 +6,7 @@ class Invitationclient {
   String Status;
   String riderId;
 
-  Invitationclient({
+  InvitationOwner({
     required this.onwerId,
     required this.riderId,
     this.owenerEmail,

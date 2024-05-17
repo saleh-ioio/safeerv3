@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:safeer/models/appColors.dart';
 import 'package:safeer/models/order.dart';
 import 'package:safeer/models/user.dart';
-import 'package:safeer/screens/Home/admin/DriverManage.dart';
+import 'package:safeer/screens/Home/admin/manageDriver.dart';
 import 'package:safeer/screens/Home/admin/maps.dart';
 import 'package:safeer/screens/Home/admin/orderDetailsPage.dart';
 import 'package:safeer/screens/Home/admin/orderFormpage.dart';
@@ -257,7 +257,7 @@ class _HomeAdminState extends State<HomeAdmin> {
                   margin: EdgeInsets.only(top: 7, left: 2, right: 2),
                   // color: AppColors.offWhite,
                   decoration: BoxDecoration(
-                    color: AppColors.offWhite,
+                    color: AppColors.white,
                     border: Border.all(color: AppColors.lightGreen, width: 2),
                   ),
                   child: Ink(
