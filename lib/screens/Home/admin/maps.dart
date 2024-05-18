@@ -37,108 +37,116 @@ class _MapsPageState extends State<MapsPage> {
     // bool filtered = false;
 
     Widget DrawerMap() {
-      return Drawer(
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              DrawerHeader(
-                decoration: BoxDecoration(
-                  color: AppColors.darkgreen,
-                ),
-                child: Text(
-                  'Map Clustering',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
+      return SingleChildScrollView(
+        child: Drawer(
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: <Widget>[
+                DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: AppColors.darkgreen,
+                  ),
+                  child: Text(
+                    'Map Clustering',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                    ),
                   ),
                 ),
-              ),
-              ListTile(
-                title: TextFormField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    label: Text('Number of Clusters'),
-                    prefixIcon: Icon(Icons.analytics),
+                ListTile(
+                  title: TextFormField(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      label: Text('Number of Clusters'),
+                      prefixIcon: Icon(Icons.analytics),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter the number of clusters';
+                      }
+                      return null;
+                    },
+                    onChanged: (value) {
+                      print(value);
+                      numberOfClusters = int.parse(value);
+                    },
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter the number of clusters';
-                    }
-                    return null;
-                  },
-                  onChanged: (value) {
-                    print(value);
-                    numberOfClusters = int.parse(value);
-                  },
                 ),
-              ),
-              // ListTile(
-              ListTile(
-                title: TextButton(
-                  onPressed: () {
-                    print('Start Clustring');
-                    if (_formKey.currentState!.validate()) {
-                      print('valid');
-                      
-                      print(numberOfClusters);
+                // ListTile(
+                ListTile(
+                  title: TextButton(
+                    onPressed: () {
+                      print('chessing around ');
+                      print('Start Clustring');
+                      // if (_formKey.currentState!.validate()) {
+                        print('valid');
+                        
+                        print(numberOfClusters);
+        
+                        
+                        ordersWithLocation = [];
+                       
+                        orders.forEach((element) {
+                          print(element.latitude);
+        
+                          if (element.latitude != null &&
+                              element.longitude != null &&
+                              element.latitude != "" &&
+                              element.longitude != "") {
+                            ordersWithLocation.add(element);
+                            print(
+                                '${element.latitude}, ${element.longitude} ${element.clientName} ${element.cluster} hello world');
+                          }
+                        });
+        
+                        ordersDouble = ordersWithLocation
+                            .map((e) => [
+                                  double.parse(e.latitude!),
+                                  double.parse(e.longitude!)
+                                ])
+                            .toList();
+        
+                        final clusters =
+                            KMeans(ordersDouble).fit(numberOfClusters);
+        
+                        // for (var i = 0; i < clusters.length; i++) {
+                        //   ordersWithLocation[i].cluster = clusters[i];
+                        //   clusteredOrders.add(ordersWithLocation[i]);
+                        // }
+        
+                        print('Clusters: $clusters');
+
 
                       
-                      ordersWithLocation = [];
-                     
-                      orders.forEach((element) {
-                        print(element.latitude);
-
-                        if (element.latitude != null &&
-                            element.longitude != null &&
-                            element.latitude != "" &&
-                            element.longitude != "") {
-                          ordersWithLocation.add(element);
+        
+        
+                        setState(() {});
+        
+                        ordersWithLocation.forEach((element) {
                           print(
-                              '${element.latitude}, ${element.longitude} ${element.clientName} ${element.cluster} hello world');
-                        }
-                      });
-
-                      ordersDouble = ordersWithLocation
-                          .map((e) => [
-                                double.parse(e.latitude!),
-                                double.parse(e.longitude!)
-                              ])
-                          .toList();
-
-                     // final clusters =
-                          KMeans(ordersDouble).fit(numberOfClusters).clusters;
-
-                      // for (var i = 0; i < clusters.length; i++) {
-                      //   ordersWithLocation[i].cluster = clusters[i];
-                      //   clusteredOrders.add(ordersWithLocation[i]);
+                              '${element.latitude}, ${element.longitude} ${element.clientName} ${element.cluster} hello world ');
+                        });
                       // }
-
-                      setState(() {});
-
-                      ordersWithLocation.forEach((element) {
-                        print(
-                            '${element.latitude}, ${element.longitude} ${element.clientName} ${element.cluster} hello world ');
-                      });
-                      Navigator.pop(context);
-                    }
-                  },
-                  child: Text('Start Clustring'),
+                    },
+                    child: Text('Start Clustring'),
+                  ),
                 ),
-              ),
-              ListTile(
-                title: Text(' exit maps page'),
-                onTap: () {
-                  // Update the state of the app
-                  // ...
-                  // Then close the drawer
-                  Navigator.pop(context);
-
-                  Navigator.pop(context);
-                },
-              ),
-            ],
+                ListTile(
+                  title: Text(' exit maps page'),
+                  onTap: () {
+                    // Update the state of the app
+                    // ...
+                    // Then close the drawer
+                    Navigator.pop(context);
+        
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       );
@@ -183,6 +191,26 @@ class _MapsPageState extends State<MapsPage> {
               ordersWithLocation.add(element);
             }
           });
+          MarkerList = ordersWithLocation
+              .map((e) => Marker(
+                    width: 80.0,
+                    height: 80.0,
+                    point: LatLng(double.parse(e.latitude!), double.parse(e.longitude!)),
+                    child:  Container(
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.location_on,
+                            color: AppColors.darkgreen,
+                            size: 40,
+                          ),
+                          Text(e.clientName!),
+                        ],
+                      ),
+                    ),
+                  ))
+              .toList();
+          
           
 
          
@@ -228,7 +256,12 @@ class _MapsPageState extends State<MapsPage> {
                    
                     print('Start Clustring');
                     if (_formKey.currentState!.validate()) {
-                     
+                     final clusterInfo = KMeans(ordersDouble).fit(numberOfClusters);
+                      print('Clusters: $clusterInfo');
+                      for (var i = 0; i < clusterInfo.clusters.length; i++) {
+                        ordersWithLocation[i].cluster = clusterInfo.clusters[i];
+                      }
+                      setState(() {});
                     }
                 }, child: Text('Start Clustring')),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.7,
