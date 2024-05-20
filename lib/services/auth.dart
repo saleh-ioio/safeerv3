@@ -18,6 +18,16 @@ class AuthService {
     });
   }
 
+  //reset password
+  Future resetPassword(String email) async {
+    try {
+      return await _auth.sendPasswordResetEmail(email: email);
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+
 // sign in anonnymously
   Future signInAnon() async {
     try {
@@ -61,6 +71,11 @@ class AuthService {
       print(e.toString());
       return null;
     }
+  }
+  //get if the user is verified or not
+  Future<bool> isEmailVerified() async {
+    User? user = _auth.currentUser;
+    return user!.emailVerified;
   }
 
 // sign in with email and password

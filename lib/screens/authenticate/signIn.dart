@@ -134,7 +134,7 @@ class _SignInState extends State<SignIn> {
                               ),
                             ),
                             Container(
-                              margin: EdgeInsets.only(bottom: 20),
+                              margin: EdgeInsets.only(bottom: 0),
                               child: TextFormField(
                                 decoration: const InputDecoration(
                                   border: OutlineInputBorder(
@@ -155,10 +155,35 @@ class _SignInState extends State<SignIn> {
                                 },
                               ),
                             ),
+                            //forget password 
+                            Container(
+                              margin: EdgeInsets.only(top: 8),
+                              alignment: Alignment.centerRight,
+                              child: InkWell(
+                                onTap: () {
+                                  _auth.resetPassword(email);
+
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                          'A password reset link has been sent to your email'),
+                                    ),
+                                  );
+                                },
+                                child: Text(
+                                  'Forget Password ?',
+                                  style: TextStyle(
+                                      color: AppColors.darkergreen,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 17),
+                                )
+                                ,
+                              ),
+                            ),
                             //error Text for form errors
                            Container(
                                   margin: EdgeInsets.symmetric(
-                                      vertical: 10, horizontal: 15),
+                                      vertical: 0, horizontal: 15),
                                   child: Text(
                                     '$error',
                                     style: TextStyle(
@@ -194,6 +219,8 @@ class _SignInState extends State<SignIn> {
                                     context.read<UserProvider>().updateUid(
                                         result.uid, widget.usertype,
                                         email: email);
+                                    context.read<UserProvider>().isEmailVerified =
+                                        await _auth.isEmailVerified();
                   
                                     Navigator.pop(context);
                                   }
@@ -210,6 +237,7 @@ class _SignInState extends State<SignIn> {
                                         fontSize: 20),
                                   )),
                             ),
+                            
                             TextButton(
                               onPressed: () {
                                 Navigator.pop(context);

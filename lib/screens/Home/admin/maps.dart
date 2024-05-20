@@ -204,7 +204,7 @@ class _MapsPageState extends State<MapsPage> {
                             color: AppColors.darkgreen,
                             size: 40,
                           ),
-                          Text(e.clientName!),
+                          Text(e.clientName),
                         ],
                       ),
                     ),
@@ -255,11 +255,13 @@ class _MapsPageState extends State<MapsPage> {
                 TextButton(onPressed: () {
                    
                     print('Start Clustring');
+                    
                     if (_formKey.currentState!.validate()) {
                      final clusterInfo = KMeans(ordersDouble).fit(numberOfClusters);
-                      print('Clusters: $clusterInfo');
+
                       for (var i = 0; i < clusterInfo.clusters.length; i++) {
                         ordersWithLocation[i].cluster = clusterInfo.clusters[i];
+                        MarkerList = [];
                       }
                       setState(() {});
                     }

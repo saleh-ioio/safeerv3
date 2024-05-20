@@ -6,7 +6,8 @@ class UserProvider extends ChangeNotifier {
   String? uid;
   String? email;
   UserTyp userType = UserTyp.owner;
-  UserProvider({this.uid, this.email});
+  bool isEmailVerified = false;
+  UserProvider({this.uid, this.email, isEmailVerified = false});
 
   void updateUid(String? uid, UserTyp userType, {String? email}) {
     print('updateUid called');
