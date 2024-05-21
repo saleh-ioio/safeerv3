@@ -66,14 +66,12 @@ class _MapsPageState extends State<MapsPage> {
           orders = snapshot.data as List<ClientOrder>;
           ordersWithLocation = [];
           orders.forEach((element) {
-            print(element.latitude);
 
             if (element.latitude != null &&
                 element.longitude != null &&
                 element.latitude != "" &&
                 element.longitude != "") {
-              // print(
-              //     '${element.latitude}, ${element.longitude} ${element.clientName} ');
+         
               ordersWithLocation.add(element);
             }
           });
@@ -106,69 +104,69 @@ class _MapsPageState extends State<MapsPage> {
          
        
 
-          return Form(
-            key: _formKey,
-            child: Column(
-              
-              children: [
-                TextFormField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    label: Text('Number of Clusters'),
-                    prefixIcon: Icon(Icons.analytics),
+          return SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                
+                children: [
+                  TextFormField(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      label: Text('Number of Clusters'),
+                      prefixIcon: Icon(Icons.analytics),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter the number of clusters';
+                      }
+                      return null;
+                    },
+                    onChanged: (value) {
+                 
+                      numberOfClusters = int.parse(value);
+                    },
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter the number of clusters';
-                    }
-                    return null;
-                  },
-                  onChanged: (value) {
-                    print(value);
-                    numberOfClusters = int.parse(value);
-                  },
-                ),
-                TextButton(onPressed: () {
-                   
-                    
-                    if (_formKey.currentState!.validate()) {
-                    print('Start Clustring');
-                      print(" number of clusters: $numberOfClusters");
-
-                       ordersDouble = ordersWithLocation
-                          .map((e) => [double.parse(e.latitude!), double.parse(e.longitude!)])
-                          .toList();
-
-                      print(" order double: ${ordersDouble.length}");
-                      clusterInfo = KMeans(ordersDouble).fit(numberOfClusters);
-
-                      
-                      print(clusterInfo!.clusters);
-
+                  TextButton(onPressed: () {
                      
-                      setState(() {});
-                    }
-                }, child: Text('Start Clustring')),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.7,
-                  child: FlutterMap(
-                      options: MapOptions(
-                          initialCenter: LatLng(31.9491529, 35.9181175),
-                          initialZoom: 13),
-                      children: [
+                      
+                      if (_formKey.currentState!.validate()) {
+                 
+            
+                         ordersDouble = ordersWithLocation
+                            .map((e) => [double.parse(e.latitude!), double.parse(e.longitude!)])
+                            .toList();
+            
+                        clusterInfo = KMeans(ordersDouble).fit(numberOfClusters);
+            
                         
-                  
-                        TileLayer(
-                          urlTemplate:
-                              'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
-                          //'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', another look for the map
-                          userAgentPackageName: 'safeer',
-                        ),
-                        MarkerLayer(
-                          markers: MarkerList,
-                        )
-                      ]),
-                ),
-              ],
+                        print(clusterInfo!.clusters);
+            
+                       
+                        setState(() {});
+                      }
+                  }, child: Text('Start Clustring')),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.7,
+                    child: FlutterMap(
+                        options: MapOptions(
+                            initialCenter: LatLng(31.9491529, 35.9181175),
+                            initialZoom: 13),
+                        children: [
+                          
+                    
+                          TileLayer(
+                            urlTemplate:
+                                'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+                            //'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', another look for the map
+                            userAgentPackageName: 'safeer',
+                          ),
+                          MarkerLayer(
+                            markers: MarkerList,
+                          )
+                        ]),
+                  ),
+                ],
+              ),
             ),
           );
         },
