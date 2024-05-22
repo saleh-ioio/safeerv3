@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:safeer/models/invetation.dart';
 import 'package:safeer/models/mapVar.dart';
 import 'package:safeer/models/order.dart';
+import 'package:safeer/models/orderStages.dart';
 import 'package:safeer/models/rider.dart';
 import 'package:safeer/models/user.dart';
 
@@ -52,6 +53,7 @@ Future<ClientOrder> getOrder({required String adminId, required String orderId})
       locationLink: value['locationLink'] ?? '',
       paymentMethod: value['paymentMethod'] ?? '',
       totalPrice: value['totalPrice'] ?? 0.0,
+    orderStatus: OrderStatus.values.firstWhere((e) => e.toString() == 'OrderStatus.${value['orderStatus']}', orElse: () => OrderStatus.stillInChina),
     ));
   }
 
@@ -106,8 +108,8 @@ class DataBaseService {
 
   
 
-  Future updateOrderData(String clientName, String? address, String phone,
-      String? locationLink, String? paymentMethod, double? totalPrice, {Rider? rider, MapPin? pin}) async {
+  Future addNewOrderData(String clientName, String? address, String phone,
+      String? locationLink, String? paymentMethod, double? totalPrice,String confirmationCode, {Rider? rider, MapPin? pin, OrderStatus orderStatus = OrderStatus.stillInChina}) async {
     DocumentReference userDoc = userCollection.doc(uid);
 
     Map<String, dynamic> orderData = {
@@ -121,6 +123,8 @@ class DataBaseService {
       'riderEmail' : rider?.email,
       'longitude' : pin?.pin.longitude.degrees.toString(),
       'latitude' : pin?.pin.latitude.degrees.toString(),
+      'orderStatus' : orderStatus.name,
+      'ConfirmationCode' : confirmationCode,
       
     };
 
@@ -131,6 +135,46 @@ class DataBaseService {
     if(rider != null){
       Map<String, dynamic> orderDataRef = {
       'orderId': orderIdInAdmin.id,
+      'adminId': uid, 
+      'AdminEmail': email,
+      };
+
+    // final orderIdInrider = 
+    await riderCollection.doc(rider.uid).collection('orders').add(orderDataRef);
+    }
+    // return await userDoc.update({
+    //   'orders': FieldValue.arrayUnion([orderData])
+    // });
+  }
+
+  //update existing order data
+  Future updateOrderData(String orderId, String clientName, String? address, String phone,
+      String? locationLink, String? paymentMethod, double? totalPrice,String confirmationCode, {Rider? rider, MapPin? pin, OrderStatus orderStatus = OrderStatus.stillInChina}) async {
+    DocumentReference userDoc = userCollection.doc(uid);
+
+    Map<String, dynamic> orderData = {
+      'clientName': clientName,
+      'address': address,
+      'phone': phone,
+      'locationLink': locationLink,
+      'paymentMethod': paymentMethod,
+      'totalPrice': totalPrice,
+      'riderId' : rider?.uid, 
+      'riderEmail' : rider?.email,
+      'longitude' : pin?.pin.longitude.degrees.toString(),
+      'latitude' : pin?.pin.latitude.degrees.toString(),
+      'orderStatus' : orderStatus.name,
+      'ConfirmationCode' : confirmationCode,
+      
+    };
+
+    final orderIdInAdmin = await userDoc.collection('orders').doc(orderId).update(orderData);
+
+    
+
+    if(rider != null){
+      Map<String, dynamic> orderDataRef = {
+      'orderId': orderId,
       'adminId': uid, 
       'AdminEmail': email,
       };
@@ -158,7 +202,7 @@ class DataBaseService {
         longitude: doc['longitude'] ?? '',
         riderId: doc['riderId'] ?? '',
         riderEmail: doc['riderEmail'] ?? '',
-        
+    orderStatus: OrderStatus.values.firstWhere((e) => e.toString() == 'OrderStatus.${doc['orderStatus']}', orElse: () => OrderStatus.stillInChina),
         
         
       );
@@ -288,6 +332,7 @@ class DataBaseService {
       locationLink: value['locationLink'] ?? '',
       paymentMethod: value['paymentMethod'] ?? '',
       totalPrice: value['totalPrice'] ?? 0.0,
+    orderStatus: OrderStatus.values.firstWhere((e) => e.toString() == 'OrderStatus.${value['orderStatus']}', orElse: () => OrderStatus.stillInChina),
     ));
   }
 

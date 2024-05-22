@@ -63,7 +63,7 @@ class _ordersListState extends State<ordersList> {
                               
                               Navigator.push(context, 
                               MaterialPageRoute(builder: (context) => orderDetails(  orderId: orders[index]['orderId'] , 
-                              adminUid: orders[index]['adminId'] )));
+                              adminUid: orders[index]['adminId'],  )));
                             },
                             child: ListTile(
                               title: Text(order.clientName),

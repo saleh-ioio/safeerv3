@@ -146,8 +146,14 @@ class _MapsPageState extends State<MapsPage> {
                         setState(() {});
                       }
                   }, child: Text('Start Clustring')),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.7,
-                    child: FlutterMap(
+                  ConstrainedBox(
+                    constraints: BoxConstraints(
+maxHeight:   MediaQuery.of(context).size.height * 0.7,
+minHeight:  MediaQuery.of(context).size.height * 0.2,
+
+                    ) ,
+                    
+                                        child: FlutterMap(
                         options: MapOptions(
                             initialCenter: LatLng(31.9491529, 35.9181175),
                             initialZoom: 13),

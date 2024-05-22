@@ -1,3 +1,4 @@
+
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,13 +9,17 @@ import 'package:latlng/latlng.dart';
 import 'package:provider/provider.dart';
 import 'package:safeer/models/appColors.dart';
 import 'package:safeer/models/mapVar.dart';
+import 'package:safeer/models/order.dart';
+import 'package:safeer/models/orderStages.dart';
 import 'package:safeer/models/rider.dart';
 import 'package:safeer/models/user.dart';
 import 'package:safeer/services/dataBase.dart';
+import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 class OrderPage extends StatefulWidget {
   final List<Rider> listOfAvailableRiders;
-  OrderPage({super.key, required this.listOfAvailableRiders});
+
+  OrderPage({super.key,  required this.listOfAvailableRiders});
 
   @override
   _OrderPageState createState() => _OrderPageState();
@@ -52,11 +57,12 @@ class _OrderPageState extends State<OrderPage> {
   final _formKey = GlobalKey<FormState>();
 
   final _locationLinkController = TextEditingController();
-  String _locationLink = '';
+  String _locationLink =  '';
 
   String _clientName = '';
   String _address = '';
   String _phone = '';
+  OrderStatus selectedStatus = OrderStatus.stillInChina;
 
   // String _paymentMethod = '';
   PaymentMethod? _paymentMethod;
@@ -68,11 +74,12 @@ class _OrderPageState extends State<OrderPage> {
 
   bool isGoodLink = false;
 
-  Widget TxtField(String label, Function(String) onChanged,
-      String Function(String?) validator) {
+  Widget buildTextField(String label, String initialValue,
+      Function(String) onChanged, String Function(String?) validator) {
     return Container(
       margin: EdgeInsets.only(bottom: 10.0),
       child: TextFormField(
+        initialValue: initialValue,
         decoration: InputDecoration(
           border: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -90,6 +97,13 @@ class _OrderPageState extends State<OrderPage> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+
+  }
+  @override
   Widget build(BuildContext context) {
     final userId = context.watch<UserProvider>().uid;
     final email = context.watch<UserProvider>().email;
@@ -99,7 +113,7 @@ class _OrderPageState extends State<OrderPage> {
       backgroundColor: AppColors.primary,
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
-        title: const Text('Order Form',
+        title: Text('New Order', 
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
       ),
       body: Container(
@@ -144,6 +158,37 @@ class _OrderPageState extends State<OrderPage> {
                 ),
                 Container(
                   margin: EdgeInsets.only(bottom: 10.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15.0),
+                    border: Border.all(
+                      color: AppColors.darkergreen,
+                      style: BorderStyle.solid,
+                    ),
+                  ),
+                  child: DropdownButton<OrderStatus>(
+                    hint: const Text('Select Order Status'),
+                    value: selectedStatus,
+                    onChanged: (OrderStatus? newValue) {
+                      setState(() {
+                        selectedStatus = newValue!;
+                      });
+                    },
+                    items: OrderStatus.values
+                        .map<DropdownMenuItem<OrderStatus>>(
+                            (OrderStatus status) {
+                      return DropdownMenuItem<OrderStatus>(
+                        value: status,
+                        child: Text(
+                          status.toString().split('.').last.replaceAllMapped(
+                              RegExp(r'([a-z])([A-Z])'),
+                              (Match m) => '${m[1]} ${m[2]}'),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(bottom: 10.0),
                   child: TextFormField(
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(
@@ -183,7 +228,7 @@ class _OrderPageState extends State<OrderPage> {
                     ),
                     validator: (value) {
                       //checks if is null or empty
-                      if (value!.isEmpty ) {
+                      if (value!.isEmpty) {
                         return null;
                       }
                       return null;
@@ -409,40 +454,49 @@ class _OrderPageState extends State<OrderPage> {
                         print(' latitude is ${mapPin.pin.latitude.degrees}');
                         print(' longitude is ${mapPin.pin.longitude.degrees}');
 
+                        //generate Confirmation code for the order so rider can use it to confirm the order
+                        final confirmationCode = DateTime.now()
+                            .millisecondsSinceEpoch
+                            .toString()
+                            .substring(8);
+
+                       
+
                         DataBaseService(uid: userId!, email: email!)
-                            .updateOrderData(
-                                _clientName,
-                                _address,
-                                _phone,
-                                _locationLinkController.text,
-                                _paymentMethod?.name,
-                                _totalPrice,
-                                rider: selectedRider,
-                                pin: mapPin);
+                            .addNewOrderData(
+                          _clientName,
+                          _address,
+                          _phone,
+                          _locationLinkController.text,
+                          _paymentMethod?.name,
+                          _totalPrice,
+                          confirmationCode,
+                          rider: selectedRider,
+                          pin: mapPin,
+                          orderStatus: selectedStatus,
+                        );
 
                         Navigator.pop(context);
                         return;
                       }
-                      // print('Original URL: $originalUrl');
-                      // print(" the text between @@" +
-                      //     extractTextAfterAt(_locationLinkController.text));
-                      // print("the text as a whole" + _locationLinkController.text);
+                 
 
-                      //  final resulting = extractValues(_locationLinkController.text);
-
-                      // final cat =  extractLatLng(_locationLinkController.text);
-                      // print("the unshortened link" + cat);
+                      final confirmationCode = DateTime.now()
+                          .millisecondsSinceEpoch
+                          .toString()
+                          .substring(8);
 
                       DataBaseService(uid: userId!, email: email!)
-                          .updateOrderData(
-                        _clientName,
-                        _address,
-                        _phone,
-                        _locationLink,
-                        _paymentMethod?.name,
-                        _totalPrice,
-                        rider: selectedRider,
-                      );
+                          .addNewOrderData(
+                              _clientName,
+                              _address,
+                              _phone,
+                              _locationLink,
+                              _paymentMethod?.name,
+                              _totalPrice,
+                              confirmationCode,
+                              rider: selectedRider,
+                              orderStatus: selectedStatus);
 
                       Navigator.pop(context);
                     }
@@ -451,7 +505,36 @@ class _OrderPageState extends State<OrderPage> {
                     'Save Order',
                     style: TextStyle(color: AppColors.lightyellow),
                   ),
-                )
+                ),
+
+                // StepProgressIndicator for Order status
+                StepProgressIndicator(
+                    totalSteps: OrderStatus.values.length,
+                    currentStep: selectedStatus.index + 1,
+                    size: 80,
+                    selectedColor: AppColors.lightGreen,
+                    unselectedColor: AppColors.lightyellow,
+                    customStep: (index, color, _) {
+                      return Container(
+                        color: color,
+                        child: Center(
+                          child: Text(
+                            OrderStatus.values[index]
+                                .toString()
+                                .split('.')
+                                .last
+                                .replaceAllMapped(RegExp(r'([a-z])([A-Z])'),
+                                    (Match m) => '${m[1]} ${m[2]}'),
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: AppColors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      );
+                    })
               ],
             ),
           ),

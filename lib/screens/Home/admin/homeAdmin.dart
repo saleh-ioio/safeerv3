@@ -263,12 +263,15 @@ class _HomeAdminState extends State<HomeAdmin> {
                   child: Ink(
                     color: AppColors.offWhite,
                     child: InkWell(
-                      onTap: () {
+                      onTap: () async{
                         final order = orders[index];
+
+                        final riders = await DataBaseService(uid: uid, email: email)
+                            .getAvailableRiders();
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => orderDetails(orderId: order.id,adminUid: uid, )));
+                                builder: (context) => orderDetails(orderId: order.id,adminUid: uid , )));
                       },
                       splashColor: AppColors.lightGreen,
                       child: Container(

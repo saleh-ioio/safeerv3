@@ -1,15 +1,23 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import 'package:safeer/models/appColors.dart';
+import 'package:safeer/models/order.dart';
+import 'package:safeer/models/orderStages.dart';
+import 'package:safeer/models/rider.dart';
+import 'package:safeer/screens/Home/admin/orderFormpage.dart';
 import 'package:safeer/services/dataBase.dart';
+import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 class orderDetails extends StatefulWidget {
   final String adminUid;
   final String orderId;
+
   const orderDetails({
     Key? key,
     required this.adminUid,
@@ -21,6 +29,7 @@ class orderDetails extends StatefulWidget {
 }
 
 class _orderDetailsState extends State<orderDetails> {
+  OrderStatus selectedStatus = OrderStatus.stillInChina;
   @override
   Widget build(BuildContext context) {
     Widget detailWidget(
@@ -64,6 +73,7 @@ class _orderDetailsState extends State<orderDetails> {
 
     return Scaffold(
         backgroundColor: AppColors.primary,
+        
         appBar: AppBar(
           iconTheme: const IconThemeData(color: Colors.white),
           title: const Text(
@@ -86,6 +96,10 @@ class _orderDetailsState extends State<orderDetails> {
                 style: TextStyle(color: AppColors.red),
               );
             }
+
+           OrderStatus selectedStatus = snapshot.data!.orderStatus!;
+            
+            
             return Container(
               margin: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
               padding: EdgeInsets.symmetric(horizontal: 3, vertical: 10),
@@ -127,6 +141,30 @@ class _orderDetailsState extends State<orderDetails> {
                       textType: "Total Price:",
                       text: snapshot.data!.totalPrice.toString()),
                   CustDivider(),
+                  // Step Indicator
+ Container(
+  padding: EdgeInsets.symmetric(horizontal: 10),
+   child: StepProgressIndicator(
+                totalSteps: OrderStatus.values.length,
+                currentStep: OrderStatus.values.indexOf(selectedStatus) + 1,
+                size: 80,
+                selectedColor: AppColors.lightGreen,
+                unselectedColor: AppColors.lightyellow,
+                customStep: (index, color, _) {
+                  return Container(
+                    color: color,
+                    child: Center(
+                      child: Text(
+                        OrderStatus.values[index].toString().split('.').last.replaceAllMapped(RegExp(r'([a-z])([A-Z])'), (Match m) => '${m[1]} ${m[2]}'),
+
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: AppColors.black, fontWeight: FontWeight.bold, fontSize: 12),
+                      ),
+                    ),
+                  );
+                }
+              ),
+ )
                 ],
               ),
             );

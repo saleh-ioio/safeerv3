@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:safeer/models/orderStages.dart';
+
 class ClientOrder {
   final String id;
   final String clientName;
@@ -11,6 +13,8 @@ class ClientOrder {
   final String? riderEmail;
   final String? longitude;
   final String? latitude;
+  final OrderStatus? orderStatus;
+  final String? ConfirmationCode;
    int? cluster;
   
   ClientOrder({
@@ -26,6 +30,8 @@ class ClientOrder {
     this.longitude,
     this.latitude,
     this.cluster,
+    this.orderStatus,
+    this.ConfirmationCode,
   });
 
 
