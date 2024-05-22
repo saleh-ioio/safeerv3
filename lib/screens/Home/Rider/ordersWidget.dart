@@ -68,7 +68,12 @@ class _ordersListState extends State<ordersList> {
                             child: ListTile(
                               title: Text(order.clientName),
                               subtitle: Text(order.address),
-                              trailing: Text(order.totalPrice.toString()),
+                              trailing: Column(
+                                children: [
+                                  Text(order.totalPrice.toString()),
+                                  Text(order.orderStatus!.name.toString())
+                                ],
+                              ),
                             ),
                           ),
                         ),

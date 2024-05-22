@@ -16,7 +16,7 @@ class HomeRiderPage extends StatefulWidget {
 enum DriverPages { Profile, currentOrders, CompletedOrders, MenageOwner, stats }
 
 class _HomeRiderPageState extends State<HomeRiderPage> {
-  DriverPages selectedPage = DriverPages.Profile;
+  DriverPages selectedPage = DriverPages.currentOrders;
   Widget DrawerBuild(String? email) {
     return Drawer(
       child: Column(

@@ -288,7 +288,8 @@ class _HomeAdminState extends State<HomeAdmin> {
                               orders[index].paymentMethod,
                               style: TextStyle(fontSize: 15),
                             ),
-                            Text(orders[index].totalPrice.toString())
+                            Text(orders[index].totalPrice.toString()),
+                            Text(orders[index].orderStatus!.name.toString())
                           ]),
                         ),
                       ),
