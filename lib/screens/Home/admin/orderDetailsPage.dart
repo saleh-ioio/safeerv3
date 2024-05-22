@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
@@ -41,7 +42,8 @@ class _orderDetailsState extends State<orderDetails> {
         required String text,
         required IconData icon,
         double fontsizeText = 18,
-        bool moveDown = false
+        bool moveDown = false,
+        bool copyIcon = false
         }) {
       return Container(
           margin: const EdgeInsets.all(3),
@@ -63,6 +65,14 @@ class _orderDetailsState extends State<orderDetails> {
                       style:  TextStyle(color: AppColors.black, fontSize: fontsizeText )
                       ,overflow: TextOverflow.ellipsis,),
                 ),
+                copyIcon? IconButton(
+                  onPressed: () {
+                    Clipboard.setData(ClipboardData(text: text));
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Copied to Clipboard')));
+                  },
+                  icon: const Icon(Icons.copy),
+                  color: AppColors.darkergreen,
+                ): Container(),
                     
               
               SizedBox(width: 15)
@@ -141,13 +151,15 @@ class _orderDetailsState extends State<orderDetails> {
                   detailWidget(
                       icon: Icons.map_sharp,
                       textType: "LocationLink: ",
-                      text: snapshot.data!.locationLink
+                      text: snapshot.data!.locationLink,
+                      copyIcon: true
                       ),
                   CustDivider(),
                   detailWidget(
                       icon: Icons.phone_android_outlined,
                       textType: "Client Phone: ",
-                      text: snapshot.data!.phone),
+                      text: snapshot.data!.phone,
+                      copyIcon: true),
                   CustDivider(),
                   detailWidget(
                       icon: Icons.payment_outlined,
@@ -159,6 +171,27 @@ class _orderDetailsState extends State<orderDetails> {
                       textType: "Total Price:",
                       text: snapshot.data!.totalPrice.toString()),
                   CustDivider(),
+                  context.read<UserProvider>().userType == UserTyp.owner? Container(
+                    margin: const EdgeInsets.all(3),
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: AppColors.darkergreen),
+
+                    color: AppColors.lightyellow,
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child:
+                    TextButton(
+                      onPressed: () {
+                        //copy to clipboard the link that the client will use to input his location
+                        Clipboard.setData(ClipboardData(text: 'https://salehalsaleh0.github.io/safeerWeb1/dist/index.html?adminId=${widget.adminUid}&orderId=${widget.orderId}'));
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Link Copied to Clipboard')));
+                      },
+                      child: const Text("Client Web link", style: TextStyle(color: AppColors.darkergreen, fontSize: 18),),
+                    )
+                  
+                  ): Container()
+                  ,
                   // Step Indicator
  Container(
   padding: EdgeInsets.symmetric(horizontal: 10),
