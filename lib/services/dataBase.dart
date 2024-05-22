@@ -53,6 +53,10 @@ Future<ClientOrder> getOrder({required String adminId, required String orderId})
       locationLink: value['locationLink'] ?? '',
       paymentMethod: value['paymentMethod'] ?? '',
       totalPrice: value['totalPrice'] ?? 0.0,
+      riderEmail: value['riderEmail'] ?? '',
+      riderId: value['riderId'] ?? '',
+      latitude: value['latitude'] ?? '',
+      longitude: value['longitude'] ?? '',
     orderStatus: OrderStatus.values.firstWhere((e) => e.toString() == 'OrderStatus.${value['orderStatus']}', orElse: () => OrderStatus.stillInChina),
     ));
   }
@@ -149,9 +153,10 @@ class DataBaseService {
 
   //update existing order data
   Future updateOrderData(String orderId, String clientName, String? address, String phone,
-      String? locationLink, String? paymentMethod, double? totalPrice,String confirmationCode, {Rider? rider, MapPin? pin, OrderStatus orderStatus = OrderStatus.stillInChina}) async {
+      String? locationLink, String? paymentMethod, double? totalPrice, {Rider? rider, MapPin? pin, OrderStatus orderStatus = OrderStatus.stillInChina}) async {
     DocumentReference userDoc = userCollection.doc(uid);
 
+    print(orderStatus.name);
     Map<String, dynamic> orderData = {
       'clientName': clientName,
       'address': address,
@@ -164,7 +169,7 @@ class DataBaseService {
       'longitude' : pin?.pin.longitude.degrees.toString(),
       'latitude' : pin?.pin.latitude.degrees.toString(),
       'orderStatus' : orderStatus.name,
-      'ConfirmationCode' : confirmationCode,
+      
       
     };
 

@@ -10,6 +10,7 @@ import 'package:safeer/models/appColors.dart';
 import 'package:safeer/models/order.dart';
 import 'package:safeer/models/orderStages.dart';
 import 'package:safeer/models/rider.dart';
+import 'package:safeer/screens/Home/admin/orderEditPage.dart';
 import 'package:safeer/screens/Home/admin/orderFormpage.dart';
 import 'package:safeer/services/dataBase.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
@@ -73,7 +74,15 @@ class _orderDetailsState extends State<orderDetails> {
 
     return Scaffold(
         backgroundColor: AppColors.primary,
-        
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+          Navigator.pop(context);
+          Navigator.push(context, 
+          MaterialPageRoute(builder: (context) => EditOrderPage(adminUid: widget.adminUid, orderId: widget.orderId)));
+          },
+          child: const Icon(Icons.edit),
+          backgroundColor: AppColors.darkergreen,
+        ),
         appBar: AppBar(
           iconTheme: const IconThemeData(color: Colors.white),
           title: const Text(
@@ -110,6 +119,7 @@ class _orderDetailsState extends State<orderDetails> {
               ),
               child: Column(
                 children: [
+                  detailWidget(textType: "Rider Email: ", text: snapshot.data!.riderEmail?? "", icon: Icons.delivery_dining),
                   detailWidget(
                       icon: Icons.account_box_outlined,
                       textType: "Client Name: ",
