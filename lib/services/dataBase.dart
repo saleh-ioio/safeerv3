@@ -315,6 +315,8 @@ return false;
       );
     }).toList();
   }
+// inveted riders
+
 
   Stream<List<InvitationOwner>> get invetations {
     print('get invetations called');
@@ -375,6 +377,16 @@ return false;
         .where('status', isEqualTo: StatusEnum.pending.name)
         .snapshots()
         .map(_InvetationsListFromSnapshot);
+    return result;
+  }
+
+  //list of pending invetations for the owner
+  Stream<List<Rider>> get allRidersInFleet {
+    final result = userCollection
+        .doc(uid)
+        .collection('fleetTable')
+        .snapshots()
+        .map(_RidersListFromSnapshot);
     return result;
   }
 }

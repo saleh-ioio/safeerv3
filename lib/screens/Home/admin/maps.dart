@@ -8,6 +8,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:safeer/models/appColors.dart';
 import 'package:safeer/models/order.dart';
+import 'package:safeer/models/rider.dart';
 import 'package:safeer/models/user.dart';
 import 'package:safeer/services/dataBase.dart';
 
@@ -28,7 +29,7 @@ class _MapsPageState extends State<MapsPage> {
     List<ClientOrder> orders = [];
     List<Marker> MarkerList = [];
     Clusters?  clusterInfo = null;
-
+    bool canOpenClusterPrompt = false;
 
 
   @override
@@ -131,7 +132,7 @@ class _MapsPageState extends State<MapsPage> {
                      
                       
                       if (_formKey.currentState!.validate()) {
-                 
+                        canOpenClusterPrompt = true;
             
                          ordersDouble = ordersWithLocation
                             .map((e) => [double.parse(e.latitude!), double.parse(e.longitude!)])
@@ -146,6 +147,59 @@ class _MapsPageState extends State<MapsPage> {
                         setState(() {});
                       }
                   }, child: Text('Start Clustring')),
+                  canOpenClusterPrompt == false
+                      ? Container()
+                      : TextButton(onPressed: ()async{
+                        List<Widget> clusterGroups = [];
+                        List<Rider> riders = [];
+                        //get all available riders
+                        riders=  await DataBaseService(uid: uid, email: email).getAvailableRiders();
+                        for(int i = 0; i< numberOfClusters; i++){
+                          clusterGroups.add( Row(
+                            
+                            children: [
+                              Icon(Icons.location_on, color: AppColors.colorClusters[i],),
+                              //choose the rider
+                              DropdownButton<Rider>(
+                                hint: Text('Choose the rider'),
+                                value: null,
+                                onChanged: (Rider? value) {
+                                  print(value);
+                                },
+                                items: riders.map((Rider rider) {
+                                  return DropdownMenuItem<Rider>(
+                                    value: rider,
+                                    child: Text(rider.email),
+                                  );
+                                }).toList(),
+                              ),
+                              
+                              
+
+                            ],
+                          ));
+                          
+
+                      
+                        }
+
+
+
+                        showDialog(context: context, builder: (context) {
+                          clusterGroups.add(TextButton(onPressed: (){
+                            Navigator.pop(context);
+                          }, child: Text('submit')));
+                          return AlertDialog(
+                            title: Text('Cluster Assigment window'),
+                            content: Text('The number of clusters is ${clusterInfo!.clusters.length}'),
+                            actions: 
+                              clusterGroups
+                            ,
+                          );
+                        });
+                      }, child: Text('Show Cluster Assigment')),
+                      
+                      
                   ConstrainedBox(
                     constraints: BoxConstraints(
 maxHeight:   MediaQuery.of(context).size.height * 0.7,

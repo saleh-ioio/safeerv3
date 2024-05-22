@@ -25,29 +25,29 @@ class _AddDriverPageState extends State<AddDriverPage> {
   Widget build(BuildContext context) {
  final   emailProv = context.read<UserProvider>().email!;
  final  uidProv = context.read<UserProvider>().uid!;
-Widget pendingInvetations(){
+// Widget pendingInvetations(){
 
-    return StreamBuilder(stream: DataBaseService(email: emailProv,uid: uidProv   ).pendingInvetations, builder:(context, snapshot) {
-      if(snapshot.connectionState == ConnectionState.waiting){
-        return LoadingAnimationWidget.fallingDot(color: AppColors.darkergreen, size: 20);
-      }
+//     return StreamBuilder(stream: DataBaseService(email: emailProv,uid: uidProv   ).pendingInvetations, builder:(context, snapshot) {
+//       if(snapshot.connectionState == ConnectionState.waiting){
+//         return LoadingAnimationWidget.fallingDot(color: AppColors.darkergreen, size: 20);
+//       }
       
-      if(snapshot.hasError){
-        return Text("error", style: TextStyle(color: AppColors.red),);
-      }
-      final pendingInvetations = snapshot.data  ;
-      print(pendingInvetations);
-      return Column(
-        children: [
-          Container(alignment: Alignment.centerLeft,
-            child: Text('Pending Invitations : ',textAlign: TextAlign.left, style: TextStyle(fontWeight: FontWeight.bold ,color:AppColors.darkergreen
-             ),),
-          ),
+//       if(snapshot.hasError){
+//         return Text("error", style: TextStyle(color: AppColors.red),);
+//       }
+//       final pendingInvetations = snapshot.data  ;
+//       print(pendingInvetations);
+//       return Column(
+//         children: [
+//           Container(alignment: Alignment.centerLeft,
+//             child: Text('Pending Invitations : ',textAlign: TextAlign.left, style: TextStyle(fontWeight: FontWeight.bold ,color:AppColors.darkergreen
+//              ),),
+//           ),
                 
-        ],
-          );
-    }, );
-  }
+//         ],
+//           );
+//     }, );
+//   }
     return 
        Container(
           padding: EdgeInsets.symmetric(horizontal: 15, vertical: 25),
@@ -139,8 +139,36 @@ Widget pendingInvetations(){
               ),
             ),
             Container(
-              margin: EdgeInsets.symmetric(vertical: 10),
-              child: pendingInvetations())
+              alignment: Alignment.centerLeft,
+              margin: EdgeInsets.symmetric(vertical: 20),
+              child: Text("All riders In Fleet :", textAlign: TextAlign.start, style: TextStyle(fontWeight: FontWeight.bold ,color:AppColors.darkergreen ),)),
+            StreamBuilder(stream: DataBaseService(email: context.read<UserProvider>().email!,uid: context.read<UserProvider>().uid! ).allRidersInFleet, builder: 
+            (context, snapshot){
+              if(snapshot.connectionState == ConnectionState.waiting){
+                return LoadingAnimationWidget.fallingDot(color: AppColors.darkergreen, size: 20);
+              }
+              if(snapshot.hasError){
+                return Text("error", style: TextStyle(color: AppColors.red),);
+              }
+              final ridersInFleet = snapshot.data  ;
+              return ListView.builder( itemCount: ridersInFleet!.length, shrinkWrap: true,
+               itemBuilder: (context, index){
+                  return 
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 5),
+                    color: AppColors.offWhite,
+                    child: ListTile(
+                      title: Text(ridersInFleet[index].email.toString()),
+                      trailing: Text(ridersInFleet[index].status, style: TextStyle(color: AppColors.red),),
+                    ),
+                  );
+                  
+               },);
+            }
+            ),
+            // Container(
+            //   margin: EdgeInsets.symmetric(vertical: 10),
+            //   child: pendingInvetations())
           ],
                ),
        );

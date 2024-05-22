@@ -21,10 +21,10 @@ class HomeAdmin extends StatefulWidget {
   State<HomeAdmin> createState() => _HomeAdminState();
 }
 
-enum onwerPages { orders, fleetManagement, analytics, settings }
+enum onwerPages { CurrentOrders, CompletedOrders, fleetManagement, analytics, settings }
 
 class _HomeAdminState extends State<HomeAdmin> {
-  onwerPages selectedPage = onwerPages.orders;
+  onwerPages selectedPage = onwerPages.CurrentOrders;
 
   final AuthService _auth = AuthService();
 
@@ -54,20 +54,7 @@ class _HomeAdminState extends State<HomeAdmin> {
                 );
               },
               icon: Icon(Icons.add)),
-          IconButton(
-            onPressed: () {
-              setState(() {});
-            },
-            icon: const Icon(Icons.notifications),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.share),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.search),
-          )
+        
         ],
       );
     }
@@ -116,31 +103,24 @@ class _HomeAdminState extends State<HomeAdmin> {
         //  Stack(
         //   children:[
         Scaffold(
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: selectedPage == onwerPages.CurrentOrders ? FloatingActionButton(
         onPressed: () {
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => MapsPage()));
         },
         child: Icon(Icons.map),
-      ),
+      ): null,
       backgroundColor: AppColors.primary,
       drawer: DrawerBuild(email),
       appBar: appBarBuild(uid, email),
-      body: selectedPage == onwerPages.orders
+      body: selectedPage == onwerPages.CurrentOrders
           ? orderList()
           : selectedPage == onwerPages.fleetManagement
               ? const AddDriverPage()
               : Container(),
       bottomNavigationBar: selectedPage != onwerPages.fleetManagement
           ? null
-          : BottomNavigationBar(
-              items: [
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.group_add), label: "Add Driver"),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.manage_accounts), label: "Menage Fleet"),
-              ],
-            ),
+          : null
     );
   }
 
@@ -161,12 +141,24 @@ class _HomeAdminState extends State<HomeAdmin> {
             accountEmail: Text(email!),
           ),
           Container(
-            color: selectedPage == onwerPages.orders ? AppColors.primary : null,
+            color: selectedPage == onwerPages.CurrentOrders ? AppColors.primary : null,
             child: ListTile(
-              title: Text("Orders"),
+              title: Text("Current Orders"),
               onTap: () {
                 setState(() {
-                  selectedPage = onwerPages.orders;
+                  selectedPage = onwerPages.CurrentOrders;
+                  Navigator.pop(context);
+                });
+              },
+            ),
+          ),
+Container(
+            color: selectedPage == onwerPages.CompletedOrders ? AppColors.primary : null,
+            child: ListTile(
+              title: Text("Completed Orders"),
+              onTap: () {
+                setState(() {
+                  selectedPage = onwerPages.CompletedOrders;
                   Navigator.pop(context);
                 });
               },
@@ -222,7 +214,7 @@ class _HomeAdminState extends State<HomeAdmin> {
     );
   }
 
-  Widget orderList() {
+  Widget orderList({bool isCompleted = false}) {
     final uid = context.watch<UserProvider>().uid;
     final email = context.watch<UserProvider>().email;
 
@@ -253,6 +245,7 @@ class _HomeAdminState extends State<HomeAdmin> {
             itemCount: orders.length,
             shrinkWrap: true,
             itemBuilder: (context, index) {
+
               return Container(
                   margin: EdgeInsets.only(top: 7, left: 2, right: 2),
                   // color: AppColors.offWhite,
@@ -266,8 +259,7 @@ class _HomeAdminState extends State<HomeAdmin> {
                       onTap: () async{
                         final order = orders[index];
 
-                        final riders = await DataBaseService(uid: uid, email: email)
-                            .getAvailableRiders();
+                       
                         Navigator.push(
                             context,
                             MaterialPageRoute(
