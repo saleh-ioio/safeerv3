@@ -191,7 +191,19 @@ class DataBaseService {
     //   'orders': FieldValue.arrayUnion([orderData])
     // });
   }
+// check if the passcode is correct
+  Future<bool> checkPasscode({required String orderId, required String adminId, required String passcode}) async {
+    final result = await userCollection.doc(adminId).collection('orders').doc(orderId).get();
+    //if yes change the order status to complete order
+if(result['ConfirmationCode'] == passcode){
+  await userCollection.doc(adminId).collection('orders').doc(orderId).update({'orderStatus': OrderStatus.completeOrder.name});
+  return true;
+}
+return false;
 
+  }
+
+  //converts a snopshot of orders to a list of orders
 
  List<ClientOrder> _OrdersListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {

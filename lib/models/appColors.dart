@@ -21,6 +21,9 @@ class AppColors {
   static const white = Color.fromARGB(255, 245, 245, 245);
   static const black = Color(0xFF000000);
 
+  //grey
+  static const grey = Color.fromARGB(255, 129, 127, 127);
+
 
 
   static const colorClusters = [

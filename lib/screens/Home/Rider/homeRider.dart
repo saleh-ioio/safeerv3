@@ -33,19 +33,7 @@ class _HomeRiderPageState extends State<HomeRiderPage> {
             accountName: Text("Driver"),
             accountEmail: Text(email!),
           ),
-          Container(
-            color:
-                selectedPage == DriverPages.Profile ? AppColors.primary : null,
-            child: ListTile(
-              title: Text("Profile",style: TextStyle( color: selectedPage == DriverPages.Profile ? AppColors.darkgreen :AppColors.black )),
-              onTap: () {
-                setState(() {
-                  selectedPage = DriverPages.Profile;
-                  Navigator.pop(context);
-                });
-              },
-            ),
-          ),
+          
           Container(
             color: selectedPage == DriverPages.currentOrders
                 ? AppColors.primary

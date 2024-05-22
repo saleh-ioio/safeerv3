@@ -5,11 +5,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:provider/provider.dart';
 
 import 'package:safeer/models/appColors.dart';
 import 'package:safeer/models/order.dart';
 import 'package:safeer/models/orderStages.dart';
 import 'package:safeer/models/rider.dart';
+import 'package:safeer/models/user.dart';
+import 'package:safeer/screens/Home/Rider/orderConfirmationPage.dart';
 import 'package:safeer/screens/Home/admin/orderEditPage.dart';
 import 'package:safeer/screens/Home/admin/orderFormpage.dart';
 import 'package:safeer/services/dataBase.dart';
@@ -72,9 +75,10 @@ class _orderDetailsState extends State<orderDetails> {
           margin: const EdgeInsets.symmetric(horizontal: 30), child: Divider());
     }
 
+    final UserTyp user = context.read<UserProvider>().userType;
     return Scaffold(
         backgroundColor: AppColors.primary,
-        floatingActionButton: FloatingActionButton(
+        floatingActionButton: user == UserTyp.owner? FloatingActionButton(
           onPressed: () {
           Navigator.pop(context);
           Navigator.push(context, 
@@ -82,7 +86,11 @@ class _orderDetailsState extends State<orderDetails> {
           },
           child: const Icon(Icons.edit),
           backgroundColor: AppColors.darkergreen,
-        ),
+        ): FloatingActionButton(onPressed: () {
+          Navigator.push(context, 
+          MaterialPageRoute(builder: (context) => OrderConfirmationPage(adminId: widget.adminUid, orderId: widget.orderId))
+          );
+        }, child: const Icon(Icons.check), backgroundColor: AppColors.yellow,),
         appBar: AppBar(
           iconTheme: const IconThemeData(color: Colors.white),
           title: const Text(
