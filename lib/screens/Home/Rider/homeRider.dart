@@ -125,8 +125,6 @@ class _HomeRiderPageState extends State<HomeRiderPage> {
           style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
         ),
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.notifications)),
-          IconButton(onPressed: () {}, icon: Icon(Icons.share)),
           IconButton(onPressed: () {}, icon: Icon(Icons.search)),
         ],
       ),
@@ -137,7 +135,7 @@ class _HomeRiderPageState extends State<HomeRiderPage> {
               : selectedPage == DriverPages.currentOrders
                   ? ordersList()
                   : selectedPage == DriverPages.CompletedOrders
-                      ? Container()
+                      ? ordersList(isCurrentOrders: false,)
                       : selectedPage == DriverPages.ManageOwner
                           ? MenageOwner()
                           : selectedPage == DriverPages.stats

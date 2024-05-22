@@ -34,7 +34,7 @@ class orderDetails extends StatefulWidget {
 }
 
 class _orderDetailsState extends State<orderDetails> {
-  OrderStatus selectedStatus = OrderStatus.stillInChina;
+  OrderStatus selectedStatus = OrderStatus.StillInChina;
   @override
   Widget build(BuildContext context) {
     Widget detailWidget(

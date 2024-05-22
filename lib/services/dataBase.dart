@@ -58,7 +58,7 @@ Future<ClientOrder> getOrder({required String adminId, required String orderId})
       latitude: value['latitude'] ?? '',
       longitude: value['longitude'] ?? '',
       ConfirmationCode: value['ConfirmationCode'] ?? '',
-    orderStatus: OrderStatus.values.firstWhere((e) => e.toString() == 'OrderStatus.${value['orderStatus']}', orElse: () => OrderStatus.stillInChina),
+    orderStatus: OrderStatus.values.firstWhere((e) => e.toString() == 'OrderStatus.${value['orderStatus']}', orElse: () => OrderStatus.StillInChina),
     ));
   }
 
@@ -114,7 +114,7 @@ class DataBaseService {
   
 
   Future addNewOrderData(String clientName, String? address, String phone,
-      String? locationLink, String? paymentMethod, double? totalPrice,String confirmationCode, {Rider? rider, MapPin? pin, OrderStatus orderStatus = OrderStatus.stillInChina}) async {
+      String? locationLink, String? paymentMethod, double? totalPrice,String confirmationCode, {Rider? rider, MapPin? pin, OrderStatus orderStatus = OrderStatus.StillInChina}) async {
     DocumentReference userDoc = userCollection.doc(uid);
 
     Map<String, dynamic> orderData = {
@@ -154,7 +154,7 @@ class DataBaseService {
 
   //update existing order data
   Future updateOrderData(String orderId, String clientName, String? address, String phone,
-      String? locationLink, String? paymentMethod, double? totalPrice, {Rider? rider, MapPin? pin, OrderStatus orderStatus = OrderStatus.stillInChina}) async {
+      String? locationLink, String? paymentMethod, double? totalPrice, {Rider? rider, MapPin? pin, OrderStatus orderStatus = OrderStatus.StillInChina}) async {
     DocumentReference userDoc = userCollection.doc(uid);
 
     print(orderStatus.name);
@@ -197,7 +197,7 @@ class DataBaseService {
     final result = await userCollection.doc(adminId).collection('orders').doc(orderId).get();
     //if yes change the order status to complete order
 if(result['ConfirmationCode'] == passcode){
-  await userCollection.doc(adminId).collection('orders').doc(orderId).update({'orderStatus': OrderStatus.completeOrder.name});
+  await userCollection.doc(adminId).collection('orders').doc(orderId).update({'orderStatus': OrderStatus.CompleteOrder.name});
   return true;
 }
 return false;
@@ -220,7 +220,7 @@ return false;
         longitude: doc['longitude'] ?? '',
         riderId: doc['riderId'] ?? '',
         riderEmail: doc['riderEmail'] ?? '',
-    orderStatus: OrderStatus.values.firstWhere((e) => e.toString() == 'OrderStatus.${doc['orderStatus']}', orElse: () => OrderStatus.stillInChina),
+    orderStatus: OrderStatus.values.firstWhere((e) => e.toString() == 'OrderStatus.${doc['orderStatus']}', orElse: () => OrderStatus.StillInChina),
         
         
       );
@@ -350,7 +350,7 @@ return false;
       locationLink: value['locationLink'] ?? '',
       paymentMethod: value['paymentMethod'] ?? '',
       totalPrice: value['totalPrice'] ?? 0.0,
-    orderStatus: OrderStatus.values.firstWhere((e) => e.toString() == 'OrderStatus.${value['orderStatus']}', orElse: () => OrderStatus.stillInChina),
+    orderStatus: OrderStatus.values.firstWhere((e) => e.toString() == 'OrderStatus.${value['orderStatus']}', orElse: () => OrderStatus.StillInChina),
     ));
   }
 

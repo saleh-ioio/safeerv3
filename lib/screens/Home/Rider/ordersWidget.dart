@@ -3,12 +3,14 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:safeer/models/appColors.dart';
 import 'package:safeer/models/order.dart';
+import 'package:safeer/models/orderStages.dart';
 import 'package:safeer/models/user.dart';
 import 'package:safeer/screens/Home/admin/orderDetailsPage.dart';
 import 'package:safeer/services/dataBase.dart';
 
 class ordersList extends StatefulWidget {
-  const ordersList({super.key});
+  final bool? isCurrentOrders;
+  const ordersList({super.key, this.isCurrentOrders = true});
 
   @override
   State<ordersList> createState() => _ordersListState();
@@ -33,8 +35,9 @@ class _ordersListState extends State<ordersList> {
         }
 
         if (snapshot.hasData) {
-          print(snapshot.data);
           final orders = snapshot.data as List<dynamic>;
+          //filter only orders that are not completed
+          
           return ListView.builder(
             shrinkWrap: true,
             itemCount: orders.length,
@@ -48,6 +51,11 @@ class _ordersListState extends State<ordersList> {
                     print(result.data);
                     if (result.hasData) {
                       final order = result.data as ClientOrder;
+
+                      if (widget.isCurrentOrders == true &&
+                          order.orderStatus!.name == OrderStatus.CompleteOrder.name) {
+                        return Container();
+                      }
                       return Container(
                         margin: EdgeInsets.only(top: 7, left: 2, right: 2),
                         decoration: BoxDecoration(

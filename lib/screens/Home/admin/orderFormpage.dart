@@ -62,7 +62,7 @@ class _OrderPageState extends State<OrderPage> {
   String _clientName = '';
   String _address = '';
   String _phone = '';
-  OrderStatus selectedStatus = OrderStatus.stillInChina;
+  OrderStatus selectedStatus = OrderStatus.StillInChina;
 
   // String _paymentMethod = '';
   PaymentMethod? _paymentMethod;
@@ -158,6 +158,7 @@ class _OrderPageState extends State<OrderPage> {
                 ),
                 Container(
                   margin: EdgeInsets.only(bottom: 10.0),
+                  padding: EdgeInsets.only(left: 10.0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15.0),
                     border: Border.all(

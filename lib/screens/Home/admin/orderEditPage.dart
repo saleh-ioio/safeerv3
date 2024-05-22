@@ -28,9 +28,9 @@ class _EditOrderPageState extends State<EditOrderPage> {
   String clientPhone = "";
   String clientAddress = "";
   double orderPrice = 0.0;
-  OrderStatus orderStatus = OrderStatus.stillInChina;
+  OrderStatus orderStatus = OrderStatus.StillInChina;
   ClientOrder? order;
-  OrderStatus selectedStatus = OrderStatus.stillInChina;
+  OrderStatus selectedStatus = OrderStatus.StillInChina;
   List<Rider>? riders ;  
 
   String? dropDownValue = null;
