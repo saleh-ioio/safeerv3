@@ -57,6 +57,7 @@ Future<ClientOrder> getOrder({required String adminId, required String orderId})
       riderId: value['riderId'] ?? '',
       latitude: value['latitude'] ?? '',
       longitude: value['longitude'] ?? '',
+      ConfirmationCode: value['ConfirmationCode'] ?? '',
     orderStatus: OrderStatus.values.firstWhere((e) => e.toString() == 'OrderStatus.${value['orderStatus']}', orElse: () => OrderStatus.stillInChina),
     ));
   }

@@ -108,118 +108,122 @@ class _orderDetailsState extends State<orderDetails> {
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
         ),
-        body: Center(
-            child: FutureBuilder(
-          future: DataBaseServiceWithNoUser()
-              .getOrder(adminId: widget.adminUid, orderId: widget.orderId),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return LoadingAnimationWidget.dotsTriangle(
-                  color: AppColors.darkergreen, size: 50);
-            }
-            if (snapshot.hasError) {
-              return const Text(
-                "error",
-                style: TextStyle(color: AppColors.red),
+        body: SingleChildScrollView(
+          child: Center(
+              child: FutureBuilder(
+            future: DataBaseServiceWithNoUser()
+                .getOrder(adminId: widget.adminUid, orderId: widget.orderId),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return LoadingAnimationWidget.dotsTriangle(
+                    color: AppColors.darkergreen, size: 50);
+              }
+              if (snapshot.hasError) {
+                return const Text(
+                  "error",
+                  style: TextStyle(color: AppColors.red),
+                );
+              }
+          
+             OrderStatus selectedStatus = snapshot.data!.orderStatus!;
+              
+              
+              return Container(
+                margin: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                padding: EdgeInsets.symmetric(horizontal: 3, vertical: 10),
+                decoration: BoxDecoration(
+                  color: AppColors.white,
+                  border: Border.all(color: AppColors.darkergreen),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Column(
+                  children: [
+                    detailWidget(textType: "Rider Email: ", text: snapshot.data!.riderEmail?? "", icon: Icons.delivery_dining),
+                    detailWidget(
+                        icon: Icons.account_box_outlined,
+                        textType: "Client Name: ",
+                        text: snapshot.data!.clientName),
+                    CustDivider(),
+                    detailWidget(
+                        icon: Icons.location_on_outlined,
+                        textType: "Client Address: ",
+                        text: snapshot.data!.address),
+                    CustDivider(),
+                    detailWidget(
+                        icon: Icons.map_sharp,
+                        textType: "LocationLink: ",
+                        text: snapshot.data!.locationLink,
+                        copyIcon: true
+                        ),
+                    CustDivider(),
+                    detailWidget(textType: "Order PassCode", text: snapshot.data!.ConfirmationCode!, icon: Icons.lock, copyIcon: true),
+                    CustDivider(),
+                    detailWidget(
+                        icon: Icons.phone_android_outlined,
+                        textType: "Client Phone: ",
+                        text: snapshot.data!.phone,
+                        copyIcon: true),
+                    CustDivider(),
+                    detailWidget(
+                        icon: Icons.payment_outlined,
+                        textType: "Payment Method:",
+                        text: snapshot.data!.paymentMethod),
+                    CustDivider(),
+                    detailWidget(
+                        icon: Icons.phone_android_outlined,
+                        textType: "Total Price:",
+                        text: snapshot.data!.totalPrice.toString()),
+                    CustDivider(),
+                    context.read<UserProvider>().userType == UserTyp.owner? Container(
+                      margin: const EdgeInsets.all(3),
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.darkergreen),
+          
+                      color: AppColors.lightyellow,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child:
+                      TextButton(
+                        onPressed: () {
+                          //copy to clipboard the link that the client will use to input his location
+                          Clipboard.setData(ClipboardData(text: 'https://salehalsaleh0.github.io/safeerWeb1/dist/index.html?adminId=${widget.adminUid}&orderId=${widget.orderId}'));
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Link Copied to Clipboard')));
+                        },
+                        child: const Text("Client Web link", style: TextStyle(color: AppColors.darkergreen, fontSize: 18),),
+                      )
+                    
+                    ): Container()
+                    ,
+                    // Step Indicator
+           Container(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+             child: StepProgressIndicator(
+                  totalSteps: OrderStatus.values.length,
+                  currentStep: OrderStatus.values.indexOf(selectedStatus) + 1,
+                  size: 80,
+                  selectedColor: AppColors.lightGreen,
+                  unselectedColor: AppColors.lightyellow,
+                  customStep: (index, color, _) {
+                    return Container(
+                      color: color,
+                      child: Center(
+                        child: Text(
+                          OrderStatus.values[index].toString().split('.').last.replaceAllMapped(RegExp(r'([a-z])([A-Z])'), (Match m) => '${m[1]} ${m[2]}'),
+          
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: AppColors.black, fontWeight: FontWeight.bold, fontSize: 12),
+                        ),
+                      ),
+                    );
+                  }
+                ),
+           )
+                  ],
+                ),
               );
-            }
-
-           OrderStatus selectedStatus = snapshot.data!.orderStatus!;
-            
-            
-            return Container(
-              margin: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-              padding: EdgeInsets.symmetric(horizontal: 3, vertical: 10),
-              decoration: BoxDecoration(
-                color: AppColors.white,
-                border: Border.all(color: AppColors.darkergreen),
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Column(
-                children: [
-                  detailWidget(textType: "Rider Email: ", text: snapshot.data!.riderEmail?? "", icon: Icons.delivery_dining),
-                  detailWidget(
-                      icon: Icons.account_box_outlined,
-                      textType: "Client Name: ",
-                      text: snapshot.data!.clientName),
-                  CustDivider(),
-                  detailWidget(
-                      icon: Icons.location_on_outlined,
-                      textType: "Client Address: ",
-                      text: snapshot.data!.address),
-                  CustDivider(),
-                  detailWidget(
-                      icon: Icons.map_sharp,
-                      textType: "LocationLink: ",
-                      text: snapshot.data!.locationLink,
-                      copyIcon: true
-                      ),
-                  CustDivider(),
-                  detailWidget(
-                      icon: Icons.phone_android_outlined,
-                      textType: "Client Phone: ",
-                      text: snapshot.data!.phone,
-                      copyIcon: true),
-                  CustDivider(),
-                  detailWidget(
-                      icon: Icons.payment_outlined,
-                      textType: "Payment Method:",
-                      text: snapshot.data!.paymentMethod),
-                  CustDivider(),
-                  detailWidget(
-                      icon: Icons.phone_android_outlined,
-                      textType: "Total Price:",
-                      text: snapshot.data!.totalPrice.toString()),
-                  CustDivider(),
-                  context.read<UserProvider>().userType == UserTyp.owner? Container(
-                    margin: const EdgeInsets.all(3),
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.darkergreen),
-
-                    color: AppColors.lightyellow,
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child:
-                    TextButton(
-                      onPressed: () {
-                        //copy to clipboard the link that the client will use to input his location
-                        Clipboard.setData(ClipboardData(text: 'https://salehalsaleh0.github.io/safeerWeb1/dist/index.html?adminId=${widget.adminUid}&orderId=${widget.orderId}'));
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Link Copied to Clipboard')));
-                      },
-                      child: const Text("Client Web link", style: TextStyle(color: AppColors.darkergreen, fontSize: 18),),
-                    )
-                  
-                  ): Container()
-                  ,
-                  // Step Indicator
- Container(
-  padding: EdgeInsets.symmetric(horizontal: 10),
-   child: StepProgressIndicator(
-                totalSteps: OrderStatus.values.length,
-                currentStep: OrderStatus.values.indexOf(selectedStatus) + 1,
-                size: 80,
-                selectedColor: AppColors.lightGreen,
-                unselectedColor: AppColors.lightyellow,
-                customStep: (index, color, _) {
-                  return Container(
-                    color: color,
-                    child: Center(
-                      child: Text(
-                        OrderStatus.values[index].toString().split('.').last.replaceAllMapped(RegExp(r'([a-z])([A-Z])'), (Match m) => '${m[1]} ${m[2]}'),
-
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: AppColors.black, fontWeight: FontWeight.bold, fontSize: 12),
-                      ),
-                    ),
-                  );
-                }
-              ),
- )
-                ],
-              ),
-            );
-          },
-        )));
+            },
+          )),
+        ));
   }
 }

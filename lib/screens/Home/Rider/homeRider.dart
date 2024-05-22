@@ -13,7 +13,7 @@ class HomeRiderPage extends StatefulWidget {
   State<HomeRiderPage> createState() => _HomeRiderPageState();
 }
 
-enum DriverPages { Profile, currentOrders, CompletedOrders, MenageOwner, stats }
+enum DriverPages { Profile, currentOrders, CompletedOrders, ManageOwner, stats }
 
 class _HomeRiderPageState extends State<HomeRiderPage> {
   DriverPages selectedPage = DriverPages.currentOrders;
@@ -64,15 +64,15 @@ class _HomeRiderPageState extends State<HomeRiderPage> {
             ),
           ),
           Container(
-            color: selectedPage == DriverPages.MenageOwner
+            color: selectedPage == DriverPages.ManageOwner
                 ? AppColors.primary
                 : null,
             child: ListTile(
-              title: Text("Menage Owners" ,style: TextStyle( color: selectedPage == DriverPages.MenageOwner ? AppColors.darkgreen :AppColors.black ) ,),
+              title: Text("Manage Owners" ,style: TextStyle( color: selectedPage == DriverPages.ManageOwner ? AppColors.darkgreen :AppColors.black ) ,),
               onTap: () {
                 setState(() {
                   Navigator.pop(context);
-                  selectedPage = DriverPages.MenageOwner;
+                  selectedPage = DriverPages.ManageOwner;
                 });
               },
             ),
@@ -138,14 +138,14 @@ class _HomeRiderPageState extends State<HomeRiderPage> {
                   ? ordersList()
                   : selectedPage == DriverPages.CompletedOrders
                       ? Container()
-                      : selectedPage == DriverPages.MenageOwner
+                      : selectedPage == DriverPages.ManageOwner
                           ? MenageOwner()
                           : selectedPage == DriverPages.stats
                               ? Container()
                               : ordersList()
         ],
       ),
-      bottomNavigationBar: selectedPage == DriverPages.MenageOwner ? BottomNavigationBar(items: 
+      bottomNavigationBar: selectedPage == DriverPages.ManageOwner ? BottomNavigationBar(items: 
       [
         BottomNavigationBarItem(icon: Icon(Icons.group_add), label: "Add Owners"),
         BottomNavigationBarItem(icon: Icon(Icons.manage_accounts), label: "Menage Owners"),
